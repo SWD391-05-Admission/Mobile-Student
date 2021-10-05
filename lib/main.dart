@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_customer/screens/consultant_detail_screen.dart';
 import 'package:mobile_customer/screens/talkshow_detail_screen.dart';
-import 'package:mobile_customer/widgets/consultant_detail_item.dart';
 import 'package:mobile_customer/widgets/consultant_item.dart';
-import 'package:mobile_customer/widgets/talkshow_detail_item.dart';
 import 'package:mobile_customer/widgets/talkshow_item.dart';
-import 'package:mobile_customer/widgets/university_detail_item.dart';
 import 'package:mobile_customer/widgets/university_item.dart';
 import './screens/login_screen.dart';
 import '../providers/google_sign_in.dart';

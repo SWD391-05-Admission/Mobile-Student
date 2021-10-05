@@ -311,7 +311,7 @@ class _AuthenScreenState extends State<AuthenScreen> {
           Text('UNIVERSITY', style: AppStyle.logoChooseUniver),
           SizedBox(height: _sizeHeight * 0.035),
           Container(
-            height: _sizeHeight * 0.635,
+            height: _sizeHeight * 0.625,
             width: _sizeWidth * 0.84,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
@@ -418,7 +418,7 @@ class _AuthenScreenState extends State<AuthenScreen> {
                     ],
                   ),
                 ),
-                SizedBox(height: _sizeHeight * 0.014),
+                SizedBox(height: _sizeHeight * 0.011),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -447,7 +447,7 @@ class _AuthenScreenState extends State<AuthenScreen> {
                     ),
                   ],
                 ),
-                SizedBox(height: _sizeHeight * 0.01),
+                // SizedBox(height: _sizeHeight * 0.005),
               ],
             ),
           ),
