@@ -263,44 +263,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   right: -28,
                                   child: RawMaterialButton(
                                     onPressed: () {
-                                      print('UPDATE AVATAR');
-                                      print(
-                                          '<========= VuLDT-DEBUG =========> name user: ${user.displayName}'
-                                              .toUpperCase());
-                                      print(
-                                          '<========= VuLDT-DEBUG =========> email: ${user.email}'
-                                              .toUpperCase());
-                                      print(
-                                          '<========= VuLDT-DEBUG =========> email verify: ${user.emailVerified}'
-                                              .toUpperCase());
-                                      print(
-                                          '<========= VuLDT-DEBUG =========> is Anonymous: ${user.isAnonymous}'
-                                              .toUpperCase());
-                                      print(
-                                          '<========= VuLDT-DEBUG =========> meta data: ${user.metadata}'
-                                              .toUpperCase());
-                                      print(
-                                          '<========= VuLDT-DEBUG =========> phone: ${user.phoneNumber}'
-                                              .toUpperCase());
-                                      print(
-                                          '<========= VuLDT-DEBUG =========> photo url: ${user.photoURL}'
-                                              .toUpperCase());
-                                      print(
-                                          '<========= VuLDT-DEBUG =========> provider data: ${user.providerData}'
-                                              .toUpperCase());
-                                      print(
-                                          '<========= VuLDT-DEBUG =========> email: ${user.refreshToken}'
-                                              .toUpperCase());
-                                      print(
-                                          '<========= VuLDT-DEBUG =========> tenan id: ${user.tenantId}'
-                                              .toUpperCase());
-                                      print(
-                                          '<========= VuLDT-DEBUG =========> uid: ${user.uid}'
-                                              .toUpperCase());
-                                      print(
-                                          '<========= VuLDT-DEBUG =========> Id token: ${user.getIdToken()}'
-                                              .toUpperCase());
-
                                       // user.getIdToken(true).then(
                                       //     (value) => log('ID TOKEN: $value'));
                                       // user.getIdTokenResult(true).then(
@@ -470,18 +432,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                     ),
-                    // Tab(
-                    //   child: Align(
-                    //     alignment: Alignment.center,
-                    //     child: Text("APPS"),
-                    //   ),
-                    // ),
-                    // Tab(
-                    //   child: Align(
-                    //     alignment: Alignment.center,
-                    //     child: Text("MOVIES"),
-                    //   ),
-                    // ),
                   ],
                   unselectedLabelColor: Colors.black45,
                   indicatorColor: Colors.black,

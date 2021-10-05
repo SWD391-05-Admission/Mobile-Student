@@ -13,12 +13,12 @@ class ConsultantDetailScreen extends StatelessWidget {
         MediaQuery.of(context).padding.bottom;
     User user = ModalRoute.of(context).settings.arguments;
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text(talkshow.),
-      //   flexibleSpace:
-      //       Container(decoration: BoxDecoration(color: Colors.white)),
-      //   centerTitle: true,
-      // ),
+      appBar: AppBar(
+        title: Text(user.fullName),
+        flexibleSpace:
+            Container(decoration: BoxDecoration(color: Colors.white)),
+        centerTitle: true,
+      ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

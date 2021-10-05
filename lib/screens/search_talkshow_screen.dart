@@ -462,7 +462,7 @@ class _SearchTalkshowScreenState extends State<SearchTalkshowScreen> {
                                   });
                                 },
                               );
-                              log('TAP FILTER');
+                              // log('TAP FILTER');
                               // return AlertDialog(
                               //   content: StatefulBuilder(),
                               // );
