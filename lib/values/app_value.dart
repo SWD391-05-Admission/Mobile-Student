@@ -1,4 +1,13 @@
+import 'dart:developer';
+
+import 'package:shared_preferences/shared_preferences.dart';
+
 class AppValue {
+  static Future<String> getToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('token');
+  }
+
   static const List<String> listKhuVuc = [
     'Quận 1',
     'Quận 2',

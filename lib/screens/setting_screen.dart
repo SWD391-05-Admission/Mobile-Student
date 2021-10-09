@@ -10,8 +10,6 @@ class SettingScreen extends StatefulWidget {
 class _SettingScreenState extends State<SettingScreen> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(child: Text('SETTING')),
-    );
+    return Container();
   }
 }

@@ -35,8 +35,9 @@ class CarouselWidget extends StatelessWidget {
           width: double.infinity,
           height: 200,
           initialPage: 0,
-          indicatorColor: Color(0xFF00CCFF),
-          indicatorBackgroundColor: Colors.white,
+          // indicatorColor: Color(0xFF00CCFF),
+          indicatorColor: Colors.white,
+          indicatorBackgroundColor: Colors.grey,
           onPageChanged: (value) {
             // debugPrint('Page changed: $value');
           },

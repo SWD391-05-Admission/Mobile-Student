@@ -1,12 +1,10 @@
 import 'dart:developer';
 
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_advanced_avatar/flutter_advanced_avatar.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:mobile_customer/models/user.dart';
 import 'package:mobile_customer/providers/google_sign_in.dart';
-import 'package:mobile_customer/values/app_colors.dart';
+import 'package:mobile_customer/providers/user_controller.dart';
 import 'package:mobile_customer/values/app_fonts.dart';
 import 'package:mobile_customer/values/app_styles.dart';
 import 'package:provider/provider.dart';
@@ -19,44 +17,14 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  // final User user = User.createUser();
-
-  final _boxShadow = BoxShadow(
-    color: Colors.black.withOpacity(0.1),
-    spreadRadius: 0.1,
-    blurRadius: 5,
-    offset: Offset(1, 1), // changes position of shadow
-  );
-
-  // Container avatarAccount(double sizeHeight, user) {
-  //   // String avatar =
-  //   //     (user == null) ? AppImageIcon.noAccount : AppImageIcon.avatar;
-  //   return Container(
-  //     height: sizeHeight * 1 / 11,
-  //     width: sizeHeight * 1 / 11,
-  //     child: CircleAvatar(
-  //       // backgroundImage: AssetImage(avatar),
-  //       backgroundImage: NetworkImage(user.photoURL),
-  //     ),
-  //     decoration: BoxDecoration(
-  //       boxShadow: [_boxShadow],
-  //       borderRadius: BorderRadius.circular(90),
-  //     ),
-  //   );
-  // }
-
-  @override
-  Widget createContainer(title, value, _sizeWidth) {
-    return Container(
-      height: 50,
-      // decoration: BoxDecoration(
-      //   border: Border.all(color: Colors.grey.withOpacity(0.05)),
-      //   borderRadius: BorderRadius.circular(4),
-      // ),
+  Widget createContainer(title, value) {
+    return SizedBox(
+      height: 50, // NEED FEED HEIGHT
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(right: 9, left: 9, top: 10),
+            padding: const EdgeInsets.only(
+                right: 9, left: 9, top: 10), // NEED FEED HEIGHT
             child: Row(
               children: [
                 Expanded(
@@ -108,18 +76,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  List<Widget> listRow(
-    _sizeWidth,
-    name,
-    email,
-    refreshToken,
-    uid,
-  ) {
+  List<Widget> listRow(User user) {
     List<Widget> list = [
-      createContainer("Name", name, _sizeWidth),
-      createContainer("Email", email, _sizeWidth),
-      createContainer("Refresh Token", refreshToken, _sizeWidth),
-      createContainer("UID", uid, _sizeWidth),
+      createContainer("Name", user.fullName),
+      createContainer("Email", user.email),
+      createContainer("Address", user.address),
+      createContainer(
+        "Birthday",
+        user.birthday,
+      ),
+      createContainer(
+        "Phone",
+        user.phone,
+      ),
+      createContainer(
+        "High School",
+        user.highSchool,
+      ),
+      createContainer(
+        "Gender",
+        user.gender,
+      ),
     ];
     return list;
   }
@@ -183,22 +160,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  @override
   Widget build(BuildContext context) {
-    final double _sizeHeight = MediaQuery.of(context).size.height;
-    final double _sizeWidth = MediaQuery.of(context).size.width;
-    // User user = User(
-    //     avatar:
-    //         'https://danongonline.com.vn/wp-content/uploads/2018/02/anh-girl-xinh-mat-moc-9.jpg',
-    //     userID: 'leduytuanvu.work@gmail.com',
-    //     userName: 'Le Duy Tuan Vu',
-    //     phone: '0961191732',
-    //     address: '115 Đoàn Thị Điểm, Lộc Thanh, Bảo Lộc, Lâm Đồng',
-    //     email: 'leduytuanvu.work@gmail.com',
-    //     sex: 'male',
-    //     birtchDay: DateTime.now(),
-    //     joinDate: DateTime.now(),
-    //     status: true);
-    final user = FirebaseAuth.instance.currentUser;
+    // User user = Provider.of<UserController>(context, listen: false).user;
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -246,8 +210,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     ],
                                   ),
                                   size: 90,
-                                  // image: AssetImage('assets/images/avatar.png'),
-                                  image: NetworkImage(user.photoURL),
+                                  image: AssetImage('assets/images/avatar.png'),
+                                  // image: NetworkImage(user.image),
                                   foregroundDecoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     border: Border.all(
@@ -263,65 +227,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   right: -28,
                                   child: RawMaterialButton(
                                     onPressed: () {
-                                      // user.getIdToken(true).then(
-                                      //     (value) => log('ID TOKEN: $value'));
-                                      // user.getIdTokenResult(true).then(
-                                      //     (value) => log(
-                                      //         'ID TOKEN ACCESS: ${value.token}'));
-                                      // user.refreshToken;
-
-                                      // String accessToken, token;
-                                      // final tmpUser = GoogleSignInProvider()
-                                      //     .getUser
-                                      //     .authentication
-                                      //     .then((value) {
-                                      //   accessToken = value.accessToken;
-                                      //   token = value.idToken;
-                                      //   log('access token: $accessToken'
-                                      //       .toUpperCase());
-                                      //   log('token: $token'.toUpperCase());
-                                      // });
-
-                                      // final newUser =
-                                      //     GoogleSignInProvider().getUser;
-                                      // log(newUser.displayName);
-                                      // newUser.authentication
-                                      //     .then((value) => null);
-                                      // GoogleSignInProvider()
-                                      //     .getUser
-                                      //     .authentication
-                                      //     .then(
-                                      //   (value) {
-                                      //     accessToken = value.accessToken;
-                                      //     token = value.idToken;
-                                      //   },
-                                      // );
-//                                       final tmpUser =
-//                                           GoogleSignInProvider().getUser;
-//                                       final ggAuth = tmpUser.authentication;
-
-//                                       try {
-//    final result = GoogleSignInProvider().getUser;
-//    final ggAuth = await result.authentication;
-//    print(ggAuth.idToken);
-//    print(ggAuth.accessToken);
-// } catch (error) {
-//   print(error);
-// // }
-                                      // accessToken =
-                                      //     GoogleSignInProvider().getAccessToken;
-                                      // token = GoogleSignInProvider().getToken;
-                                      // log(widget)
-                                      // void getToken() async {
-                                      //   final result =
-                                      //       await GoogleSignInProvider()
-                                      //           .getUser;
-                                      //   final ggAuth =
-                                      //       await result.authentication;
-                                      // log('access token: $accessToken'
-                                      //     .toUpperCase());
-                                      // log('token: $token'.toUpperCase());
-                                      // }
                                       final provider =
                                           Provider.of<GoogleSignInProvider>(
                                         context,
@@ -339,37 +244,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     shape: CircleBorder(),
                                   ),
                                 ),
-                                // Positioned(
-                                //   left: 192,
-                                //   top: -25,
-                                //   child: GestureDetector(
-                                //     child: IconButton(
-                                //       icon: Icon(
-                                //         Icons.logout,
-                                //         color: Colors.black87,
-                                //       ),
-                                //       iconSize: 22,
-                                //       onPressed: () {
-                                //         print('LOGOUT');
-                                //         // Navigator.of(context).pushNamed('/');
-                                //         // final provider =
-                                //         //     Provider.of<GoogleSignInProvider>(
-                                //         //         context,
-                                //         //         listen: false);
-                                //         // provider.googleLogout();
-                                //       },
-                                //     ),
-                                //     onTap: () {
-                                //       print('LOGOUT');
-                                //       // Navigator.of(context).pushNamed('/');
-                                //       // final provider =
-                                //       //     Provider.of<GoogleSignInProvider>(
-                                //       //         context,
-                                //       //         listen: false);
-                                //       // provider.googleLogout();
-                                //     },
-                                //   ),
-                                // ),
                               ],
                             ),
                           ),
@@ -378,7 +252,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           Center(
                             child: Text(
-                              'Lê Duy Tuấn Vũ',
+                              // user.fullName,
+                              'Tuan Vu',
                               style: AppStyle.h1.copyWith(
                                 color: Colors.black87,
                                 fontWeight: FontWeight.bold,
@@ -448,13 +323,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 SizedBox(
                   height: 10,
                 ),
-                ...listRow(
-                  _sizeWidth,
-                  user.displayName,
-                  user.email,
-                  user.refreshToken,
-                  user.uid,
-                ),
+                // ...listRow(user),
+                ElevatedButton(
+                  onPressed: () {
+                    // UserController().getUser();
+                    // User newUser =
+                    //     Provider.of<UserController>(context, listen: false)
+                    //         .getCurrentUser();
+                    // log('SAVE USER : ${newUser.fullName}');
+                    // UserController().inUser();
+                  },
+                  child: Text('GET PROFILE'),
+                )
               ],
             ),
             Icon(Icons.wallet_travel),

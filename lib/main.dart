@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_customer/providers/user_controller.dart';
 import 'package:mobile_customer/screens/consultant_detail_screen.dart';
 import 'package:mobile_customer/screens/talkshow_detail_screen.dart';
 import 'package:mobile_customer/widgets/consultant_item.dart';
 import 'package:mobile_customer/widgets/talkshow_item.dart';
-import 'package:mobile_customer/widgets/university_item.dart';
 import './screens/login_screen.dart';
 import '../providers/google_sign_in.dart';
 import 'package:flutter/services.dart';
@@ -22,31 +22,30 @@ import 'package:firebase_core/firebase_core.dart';
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(
-    // MultiProvider(
-    //   providers: [
-    //   ],
-    // ),
-    MyApp(),
-  );
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // Do not allow the device to rotate horizontally
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    return ChangeNotifierProvider(
-      create: (context) => GoogleSignInProvider(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(
+          value: GoogleSignInProvider(),
+        ),
+        ChangeNotifierProvider.value(
+          value: UserController(),
+        ),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch:
               AppColors.generateMaterialColor(AppColors.primaryColor),
-          // Display the image corresponding to the running platform
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         initialRoute: LoginPage.routeName,
@@ -56,7 +55,7 @@ class MyApp extends StatelessWidget {
           BottomBar.routeName: (context) => const BottomBar(),
           ProfileScreen.routeName: (context) => const ProfileScreen(),
           UniversityScreen.routeName: (context) => const UniversityScreen(),
-          UniversityItem.routeName: (context) => const UniversityItem(),
+          // UniversityItem.routeName: (context) => const UniversityItem(),
           // UniversityDetailItem.routeName: (context) => UniversityDetailItem(),
           UniversityDetailScreen.routeName: (context) =>
               const UniversityDetailScreen(),

@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_customer/screens/authen_screen.dart';
+import 'package:mobile_customer/screens/profile_screen.dart';
 import 'package:mobile_customer/widgets/bottom_bar_widget.dart';
 import 'package:http/http.dart' as http;
 
@@ -27,7 +28,6 @@ class LoginPage extends StatelessWidget {
           return AuthenScreen();
         }
       },
-      // ),
     );
   }
 }
