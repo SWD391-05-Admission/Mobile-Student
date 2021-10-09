@@ -37,7 +37,7 @@ class Talkshow {
               'A1$i/5 Đường sô 441, Lê Văn Việt, Quận 9, Thành Phố Thủ Đức',
           description: 'I am a handsome boy, I love pink and hate lies $i',
           gender: 'Male $i',
-          birthday: DateTime.parse('200$i-01-01 03:07:00'),
+          birthday: '03/07/1998',
         ),
         price: i + 2,
         description:

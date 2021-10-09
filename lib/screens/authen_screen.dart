@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../providers/google_sign_in.dart';
 import '../values/app_colors.dart';
 import '../values/app_styles.dart';
@@ -168,19 +169,8 @@ class _AuthenScreenState extends State<AuthenScreen> {
                           Expanded(
                             child: FlatButton(
                               onPressed: () {
-                                // if (userName.isNotEmpty && password.isNotEmpty) {
-                                //   setState(() {});
-                                print(
-                                    'USERNAME : $userName, PASSWORD : $password');
                                 FocusScope.of(context)
                                     .requestFocus(FocusNode());
-                                //   // Navigator.of(context).pushNamed('/bottom-bar');
-                                // } else {
-                                //   setState(() {
-                                //     _messErrorUserName = 'Username is not empty';
-                                //     _messErrorPassword = 'Password is not empty';
-                                //   });
-                                // }
                               },
                               child: Text(
                                 'SIGN IN',
@@ -205,11 +195,6 @@ class _AuthenScreenState extends State<AuthenScreen> {
                               Icons.email_outlined,
                               color: Colors.white,
                             ),
-                            // FaIcon(
-                            //   FontAwesomeIcons.google,
-                            //   color: Colors.white,
-                            //   size: 18,
-                            // ),
                             Expanded(
                               child: Text(
                                 'Sign in with Google',
@@ -228,34 +213,12 @@ class _AuthenScreenState extends State<AuthenScreen> {
                             isLoading = true;
                           });
                           final provider = Provider.of<GoogleSignInProvider>(
-                              context,
-                              listen: false);
+                            context,
+                            listen: false,
+                          );
                           provider.googleLogin();
-
-                          // if (provider.user != null) {
-                          //   print(
-                          //       '<========= VuLDT-DEBUG =========> vô authen screen'
-                          //           .toUpperCase());
-                          //   Navigator.of(context).pushNamed('/bottom-bar');
-                          // }
                         },
                       ),
-                      // child: ElevatedButton.icon(
-                      //   style: ElevatedButton.styleFrom(
-                      //     primary: Colors.white,
-                      //     onPrimary: Colors.black,
-                      //     minimumSize: Size(
-                      //       double.infinity,
-                      //       50,
-                      //     ),
-                      //   ),
-                      //   icon: FaIcon(
-                      //     FontAwesomeIcons.google,
-                      //     color: Colors.red,
-                      //   ),
-                      //   label: Text('Login with Google'),
-                      //   onPressed: () {},
-                      // ),
                     ),
                     SizedBox(height: _sizeHeight * 0.013),
                     Row(
@@ -391,7 +354,6 @@ class _AuthenScreenState extends State<AuthenScreen> {
                     },
                   ),
                 ),
-                // SizedBox(height: _sizeHeight * 0.01),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Row(
@@ -399,16 +361,12 @@ class _AuthenScreenState extends State<AuthenScreen> {
                       Expanded(
                         child: FlatButton(
                           onPressed: () {
-                            print(
-                                'USERNAME : $userName, PHONE : $phone, PASS : $password, CONFIRM PASS : $confirmPass');
-                            // Navigator.of(context).pushNamed('/home');
                             FocusScope.of(context).requestFocus(FocusNode());
                           },
                           child: Text(
                             'SIGN UP',
                             style: AppStyle.button,
                           ),
-                          // color: Colors.grey.withOpacity(0.2),
                           color: Colors.blue,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5),
@@ -456,16 +414,27 @@ class _AuthenScreenState extends State<AuthenScreen> {
     );
   }
 
+  // String tokenTmp = '';
+  // Future<String> getToken() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   log('HIHIIH : ${prefs.getString('token')}');
+  //   tokenTmp = prefs.getString('token');
+  //   log('TOKEN LUU TRONG GET TOKEN : $tokenTmp');
+  //   return tokenTmp;
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(color: Colors.white),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        body: isLoading
+        body: (isLoading == true)
             ? Center(child: CircularProgressIndicator(color: Colors.black54))
             : Center(
                 child: _loginScreen ? getScreenSignIn() : getScreenSignUp()),
+        // body:
+        //     Center(child: _loginScreen ? getScreenSignIn() : getScreenSignUp()),
       ),
     );
   }

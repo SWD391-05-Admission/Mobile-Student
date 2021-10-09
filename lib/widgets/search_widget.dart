@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile_customer/values/app_fonts.dart';
 import 'package:mobile_customer/values/app_styles.dart';
 import 'package:mobile_customer/values/app_value.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SearchWidget extends StatefulWidget {
   const SearchWidget({this.nameSearch});
@@ -41,6 +42,17 @@ class _SearchWidgetState extends State<SearchWidget> {
                 onTap: () {
                   FocusScope.of(context).requestFocus(FocusNode());
                   print('VALUE search controller : ${searchController.text}');
+                  // String tokenTmp = '';
+                  // Future getToken() async {
+                  //   SharedPreferences prefs =
+                  //       await SharedPreferences.getInstance();
+                  //   log('HIHIIH : ${prefs.getString('token')}');
+                  //   tokenTmp = prefs.getString('token');
+                  //   log('TOKEN LUU TRONG GET TOKEN : $tokenTmp');
+                  // }
+
+                  // getToken();
+                  // log('VO NE: $tokenTmp');
                 },
               ),
             ),

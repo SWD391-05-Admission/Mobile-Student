@@ -32,61 +32,10 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Talkshow> listTalkshow = [];
   List<User> listConsultant = [];
   List<University> listUniversity = [];
-  List<String> listKhuVuc = [
-    'None',
-    'Quận 1',
-    'Quận 2',
-    'Quận 3',
-    'Quận 4',
-    'Quận 5',
-    'Quận 6',
-    'Quận 7',
-    'Quận 8',
-    'Quận 9',
-    'Quận 10',
-    'Quận 11',
-    'Quận 12',
-    'Quận Bình Thạnh',
-    'Quận Tân Bình',
-    'Quận Bình Tân',
-    'Quận Gò Vấp',
-  ];
-  List<String> listLoaiTruong = [
-    'None',
-    'Công lập',
-    'Dân lập',
-    'Quân sự',
-  ];
-  List<String> listCapBacDaoTao = [
-    'None',
-    'Trung cấp',
-    'Cao đẳng',
-    'Đại học',
-    'Cao học',
-  ];
-  List<String> listNhomNghanh = [
-    'None',
-    'D1',
-    'A1',
-    'B1',
-    'A',
-    'D',
-    'B',
-    'C',
-    'E',
-  ];
 
-  dynamic tmp1;
-  IconData _icon = Icons.search;
   final controller = TextEditingController();
   PageController _pageController;
   int _currentIndex = 0;
-  List<String> listTmp = [
-    'LE',
-    'DUY',
-    'TUAN',
-    'VU',
-  ];
 
   @override
   void initState() {
@@ -111,15 +60,16 @@ class _HomeScreenState extends State<HomeScreen> {
               GestureDetector(
                 child: Container(
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      color: Color(0xFFDDDDDD),
-                      boxShadow: [
-                        BoxShadow(
-                          blurRadius: 7,
-                          color: Color(0xFFBBBBBB),
-                        )
-                      ],
-                      border: Border.all(width: 0.05, color: Colors.black)),
+                    borderRadius: BorderRadius.circular(5),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        blurRadius: 7,
+                        color: Color(0xFFBBBBBB),
+                      )
+                    ],
+                    border: Border.all(width: 0.05, color: Colors.black),
+                  ),
                   child: Column(
                     children: [
                       ClipRRect(
@@ -165,15 +115,16 @@ class _HomeScreenState extends State<HomeScreen> {
               GestureDetector(
                 child: Container(
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      color: Color(0xFFDDDDDD),
-                      boxShadow: [
-                        BoxShadow(
-                          blurRadius: 7,
-                          color: Color(0xFFBBBBBB),
-                        )
-                      ],
-                      border: Border.all(width: 0.05, color: Colors.black)),
+                    borderRadius: BorderRadius.circular(5),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        blurRadius: 7,
+                        color: Color(0xFFBBBBBB),
+                      )
+                    ],
+                    border: Border.all(width: 0.05, color: Colors.black),
+                  ),
                   child: Column(
                     children: [
                       ClipRRect(
@@ -219,15 +170,16 @@ class _HomeScreenState extends State<HomeScreen> {
               GestureDetector(
                 child: Container(
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      color: Color(0xFFDDDDDD),
-                      boxShadow: [
-                        BoxShadow(
-                          blurRadius: 7,
-                          color: Color(0xFFBBBBBB),
-                        )
-                      ],
-                      border: Border.all(width: 0.05, color: Colors.black)),
+                    borderRadius: BorderRadius.circular(5),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        blurRadius: 7,
+                        color: Color(0xFFBBBBBB),
+                      )
+                    ],
+                    border: Border.all(width: 0.05, color: Colors.black),
+                  ),
                   child: Column(
                     children: [
                       ClipRRect(
@@ -1045,12 +997,12 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         SizedBox(height: _sizeHeight * 0.02),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 170),
-          child: Divider(
-            color: Colors.black38,
-          ),
-        ),
+        // Padding(
+        //   padding: const EdgeInsets.symmetric(horizontal: 170),
+        //   child: Divider(
+        //     color: Colors.black38,
+        //   ),
+        // ),
         SizedBox(height: _sizeHeight * 0.02),
         (isTalkshow)
             ? Column(
