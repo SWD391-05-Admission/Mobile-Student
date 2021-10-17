@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_customer/providers/user_controller.dart';
-import 'package:mobile_customer/screens/consultant_detail_screen.dart';
-import 'package:mobile_customer/screens/talkshow_detail_screen.dart';
-import 'package:mobile_customer/widgets/consultant_item.dart';
-import 'package:mobile_customer/widgets/talkshow_item.dart';
+import './providers/user_controller.dart';
+import './screens/book_detail_screen.dart';
+import 'screens/counselor_detail_screen.dart';
+import './screens/talkshow_detail_screen.dart';
+import './widgets/consultant_item.dart';
+import './widgets/talkshow_item.dart';
 import './screens/login_screen.dart';
 import '../providers/google_sign_in.dart';
 import 'package:flutter/services.dart';
 import '../screens/profile_screen.dart';
-import 'screens/search_consultant_screen.dart';
-import '../screens/search_talkshow_screen.dart';
-import '../screens/search_university_screen.dart';
 import '../screens/university_detail_screen.dart';
 import '../screens/university_screen.dart';
 import '../widgets/bottom_bar_widget.dart';
@@ -50,28 +48,19 @@ class MyApp extends StatelessWidget {
         ),
         initialRoute: LoginPage.routeName,
         routes: {
-          AuthenScreen.routeName: (context) => const AuthenScreen(),
+          AuthenScreen.routeName: (context) => AuthenScreen(),
           LoginPage.routeName: (context) => const LoginPage(),
           BottomBar.routeName: (context) => const BottomBar(),
           ProfileScreen.routeName: (context) => const ProfileScreen(),
           UniversityScreen.routeName: (context) => const UniversityScreen(),
-          // UniversityItem.routeName: (context) => const UniversityItem(),
-          // UniversityDetailItem.routeName: (context) => UniversityDetailItem(),
           UniversityDetailScreen.routeName: (context) =>
               const UniversityDetailScreen(),
           TalkshowDetailScreen.routeName: (context) => TalkshowDetailScreen(),
           ConsultantItem.routeName: (context) => const ConsultantItem(),
-          // ConsultantDetailItem.routeName: (context) => ConsultantDetailItem(),
           ConsultantDetailScreen.routeName: (context) =>
               ConsultantDetailScreen(),
-          SearchConsultantScreen.routeName: (context) =>
-              const SearchConsultantScreen(),
           TalkshowItem.routeName: (context) => const TalkshowItem(),
-          // TalkshowDetailItem.routeName: (context) => TalkshowDetailItem(),
-          SearchTalkshowScreen.routeName: (context) =>
-              const SearchTalkshowScreen(),
-          SearchUniversityScreen.routeName: (context) =>
-              const SearchUniversityScreen(),
+          BookDetailScreen.routeName: (context) => const BookDetailScreen(),
         },
       ),
     );

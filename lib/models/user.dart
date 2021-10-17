@@ -9,16 +9,17 @@ class User {
   String birthday;
   String highSchool;
 
-  User(
-      {this.email,
-      this.fullName,
-      this.phone,
-      this.image,
-      this.address,
-      this.description,
-      this.gender,
-      this.birthday,
-      this.highSchool});
+  User({
+    this.email,
+    this.fullName,
+    this.phone,
+    this.image,
+    this.address,
+    this.description,
+    this.gender,
+    this.birthday,
+    this.highSchool,
+  });
 
   static List<User> createListConsulant() {
     List<User> list = [];

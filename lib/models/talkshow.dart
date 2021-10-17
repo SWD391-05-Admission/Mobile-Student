@@ -1,35 +1,47 @@
-import 'package:mobile_customer/models/user.dart';
+import '../models/major.dart';
+import '../models/university.dart';
+
+import '../models/counselor.dart';
+import 'address.dart';
 
 class Talkshow {
   int ID;
   String image;
   String timeStart;
   String timeFinish;
+  String date;
   int price;
-  User speaker;
+  Counselor counselor;
   String description;
+  Major major;
 
-  Talkshow(
-      {this.ID,
-      this.image,
-      this.timeStart,
-      this.timeFinish,
-      this.price,
-      this.speaker,
-      this.description});
+  Talkshow({
+    this.ID,
+    this.image,
+    this.timeStart,
+    this.timeFinish,
+    this.date,
+    this.price,
+    this.counselor,
+    this.description,
+    this.major,
+  });
 
   static List<Talkshow> createListTalkshow() {
     List<Talkshow> list = [];
     for (int i = 0; i < 10; i++) {
+      List<University> listUniversity = University.createListUniversity();
       Talkshow newTalkshow = Talkshow(
         ID: i + 1,
         image:
             'https://www.vjl.com.vn/img/baiviet/Talkshow-Bi-quyet-kh-fpkvo.png',
         timeStart: '${i + 1}0:20',
         timeFinish: '${i + 2}:20',
-        speaker: User(
+        date: ' on  20-10-2021',
+        counselor: Counselor(
+          ID: i,
           email: 'demo$i@gmail.com',
-          fullName: 'Demo$i',
+          fullName: 'Lê Văn Tài',
           phone: '096119173$i',
           image:
               'https://danongonline.com.vn/wp-content/uploads/2018/02/anh-girl-xinh-mat-moc-9.jpg',
@@ -42,6 +54,11 @@ class Talkshow {
         price: i + 2,
         description:
             'This is a talkshow about FPT University. We have alot of story about this university.',
+        major: Major(
+          code: 'code $i',
+          name: 'Software Engineer ($i)',
+          listUniversity: listUniversity,
+        ),
       );
       list.add(newTalkshow);
     }

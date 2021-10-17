@@ -28,7 +28,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: Row(
               children: [
                 Expanded(
-                  flex: 1,
+                  flex: 2,
                   child: Padding(
                     padding: const EdgeInsets.only(left: 11.0),
                     child: Text(
@@ -39,7 +39,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
                 Expanded(
-                  flex: 3,
+                  flex: 4,
                   child: Text(
                     value,
                     style: AppStyle.h3,
@@ -78,25 +78,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   List<Widget> listRow(User user) {
     List<Widget> list = [
-      createContainer("Name", user.fullName),
-      createContainer("Email", user.email),
-      createContainer("Address", user.address),
+      createContainer("Name", (user.fullName == null) ? '' : user.fullName),
+      createContainer("Email", (user.email == null) ? '' : user.email),
+      createContainer("Address", (user.address == null) ? '' : user.address),
+      createContainer("Birthday", (user.birthday == null) ? '' : user.birthday),
+      createContainer("Phone", (user.phone == null) ? '' : user.phone),
       createContainer(
-        "Birthday",
-        user.birthday,
-      ),
-      createContainer(
-        "Phone",
-        user.phone,
-      ),
-      createContainer(
-        "High School",
-        user.highSchool,
-      ),
-      createContainer(
-        "Gender",
-        user.gender,
-      ),
+          "High School", (user.highSchool == null) ? '' : user.highSchool),
+      createContainer("Gender", (user.gender == null) ? '' : user.gender),
     ];
     return list;
   }
@@ -105,6 +94,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   _displayDialog(BuildContext context, String titleField, String value) async {
     String newTitle = titleField.toLowerCase();
+    var controller = TextEditingController();
+    controller.text = value;
+    String oldValue = '';
     return showDialog(
       context: context,
       builder: (context) {
@@ -118,7 +110,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             style: AppStyle.h1.copyWith(fontSize: 19),
           ),
           content: TextField(
-            controller: _textFieldController,
+            controller: controller,
+            autofocus: true,
             textInputAction: TextInputAction.go,
             // keyboardType: TextInputType.multiline(),
             decoration: InputDecoration(
@@ -150,7 +143,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 style: AppStyle.h2,
               ),
               onPressed: () {
-                _textFieldController.clear();
+                // _textFieldController.clear();
+                // log(controller.text);
+                if (titleField == 'Email') {
+                  user.email = controller.text;
+                } else if (titleField == 'Address') {
+                  user.address = controller.text;
+                } else if (titleField == 'Name') {
+                  user.fullName = controller.text;
+                } else if (titleField == 'Birthday') {
+                  user.birthday = controller.text;
+                } else if (titleField == 'Phone') {
+                  user.phone = controller.text;
+                } else if (titleField == 'High School') {
+                  user.highSchool = controller.text;
+                } else if (titleField == 'Gender') {
+                  user.gender = controller.text;
+                }
+                // UserController().updateUser(user);
+                UserController().setUpdateUser(user);
                 Navigator.of(context).pop();
               },
             ),
@@ -160,15 +171,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  User user;
+
+  @override
+  void initState() {
+    // UserController().setUser();
+    user = Provider.of<UserController>(context, listen: false).user;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    // User user = Provider.of<UserController>(context, listen: false).user;
+    user = Provider.of<UserController>(context, listen: false).user;
+    // log(user.image);
+    final double _sizeHeight = MediaQuery.of(context).size.height -
+        MediaQuery.of(context).padding.top -
+        MediaQuery.of(context).padding.bottom;
     return DefaultTabController(
       length: 2,
       child: Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(230),
-          child: Container(
+          preferredSize: Size.fromHeight(_sizeHeight * 0.325),
+          child: SizedBox(
+            // color: Colors.amber,
             child: Column(
               children: [
                 Container(
@@ -227,12 +252,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   right: -28,
                                   child: RawMaterialButton(
                                     onPressed: () {
-                                      final provider =
-                                          Provider.of<GoogleSignInProvider>(
-                                        context,
-                                        listen: false,
-                                      );
-                                      provider.googleLogout();
+                                      log('TAP CHANGE AVATAR');
                                     },
                                     elevation: 8.0,
                                     fillColor: Color(0xFFF5F6F9),
@@ -248,15 +268,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           ),
                           const SizedBox(
-                            height: 13,
+                            height: 15,
                           ),
                           Center(
                             child: Text(
                               // user.fullName,
-                              'Tuan Vu',
+                              'Le Duy Tuan Vu',
                               style: AppStyle.h1.copyWith(
                                 color: Colors.black87,
-                                fontWeight: FontWeight.bold,
+                                // fontWeight: FontWeight.bold,
+                                fontFamily: AppFonts.poppins,
                                 fontSize: 19,
                                 shadows: [
                                   Shadow(
@@ -269,7 +290,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           ),
                           SizedBox(
-                            height: 13.5,
+                            height: 16,
                           )
                         ],
                       ),
@@ -278,7 +299,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 // ),
                 SizedBox(
-                  height: 10,
+                  height: _sizeHeight * 0.005,
                 ),
                 TabBar(
                   indicatorSize: TabBarIndicatorSize.label,
@@ -286,31 +307,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Tab(
                       child: Align(
                         alignment: Alignment.center,
-                        child: Text(
-                          "Profile",
-                          style: TextStyle(
-                            fontFamily: AppFonts.montserrat,
-                            fontSize: 16,
-                          ),
-                        ),
+                        child: Text("Profile", style: AppStyle.barStyle),
                       ),
                     ),
                     Tab(
                       child: Align(
                         alignment: Alignment.center,
-                        child: Text(
-                          "Wallet",
-                          style: TextStyle(
-                            fontFamily: AppFonts.montserrat,
-                            fontSize: 16,
-                          ),
-                        ),
+                        child: Text("Wallet", style: AppStyle.barStyle),
                       ),
                     ),
                   ],
-                  unselectedLabelColor: Colors.black45,
+                  unselectedLabelColor: Colors.black38,
                   indicatorColor: Colors.black,
-                  indicatorWeight: 0.5,
+                  indicatorWeight: 0.8,
                 )
               ],
             ),
@@ -324,20 +333,65 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   height: 10,
                 ),
                 // ...listRow(user),
-                ElevatedButton(
-                  onPressed: () {
-                    // UserController().getUser();
-                    // User newUser =
-                    //     Provider.of<UserController>(context, listen: false)
-                    //         .getCurrentUser();
-                    // log('SAVE USER : ${newUser.fullName}');
-                    // UserController().inUser();
-                  },
-                  child: Text('GET PROFILE'),
-                )
+                // Padding(
+                //   padding: const EdgeInsets.symmetric(horizontal: 16),
+                //   child: FlatButton(
+                //     onPressed: () {
+                //       // User user = UserController().user;
+                //       // log(user.fullName);
+                //       final provider = Provider.of<GoogleSignInProvider>(
+                //         context,
+                //         listen: false,
+                //       );
+                //       provider.googleLogout();
+                //     },
+                //     child: Text('LOG OUT'),
+                //   ),
+                // )
+                SizedBox(
+                  height: 7,
+                ),
+                // FlatButton(
+                //   child: Text(
+                //     'Logout',
+                //     style: AppStyle.h3,
+                //     textAlign: TextAlign.start,
+                //   ),
+                //   onPressed: () {
+                //     // final provider = Provider.of<GoogleSignInProvider>(
+                //     //   context,
+                //     //   listen: false,
+                //     // );
+                //     // provider.googleLogout();
+                //   },
+                // ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 16),
+                  child: GestureDetector(
+                    child: Text(
+                      'Logout',
+                      style: AppStyle.h3,
+                      textAlign: TextAlign.start,
+                    ),
+                    onTap: () {
+                      final provider = Provider.of<GoogleSignInProvider>(
+                        context,
+                        listen: false,
+                      );
+                      provider.googleLogout();
+                    },
+                  ),
+                ),
+                SizedBox(
+                  height: 25,
+                ),
               ],
             ),
-            Icon(Icons.wallet_travel),
+            ListView(
+              children: [
+                Icon(Icons.wallet_travel),
+              ],
+            ),
           ],
         ),
       ),

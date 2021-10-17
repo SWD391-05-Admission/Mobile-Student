@@ -9,7 +9,7 @@ class AppStyle {
     color: AppColors.black87,
     fontFamily: AppFonts.montserrat,
     fontWeight: FontWeight.bold,
-    fontSize: 18,
+    fontSize: 16,
     wordSpacing: 1.5,
   );
 
@@ -44,6 +44,18 @@ class AppStyle {
   static const h4 = TextStyle(
     fontFamily: AppFonts.montserrat,
     fontSize: 14,
+  );
+
+  static const bookDetail = TextStyle(
+    fontFamily: AppFonts.poppins,
+    fontSize: 12,
+    shadows: [
+      Shadow(
+        // offset: Offset(1.0, 1.0),
+        blurRadius: 8,
+        color: Color(0xFF999999),
+      ),
+    ],
   );
 
   static const h5 = TextStyle(
@@ -198,5 +210,16 @@ class AppStyle {
   static const dropdownStyle = TextStyle(
     fontFamily: AppFonts.poppins,
     fontSize: 13,
+  );
+
+  static const barStyle = TextStyle(
+    fontFamily: AppFonts.poppins,
+    fontSize: 16,
+    shadows: [
+      Shadow(
+        blurRadius: 8,
+        color: Colors.black12,
+      ),
+    ],
   );
 }

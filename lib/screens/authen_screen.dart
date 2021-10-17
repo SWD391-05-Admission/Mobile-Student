@@ -10,7 +10,8 @@ import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
 class AuthenScreen extends StatefulWidget {
-  const AuthenScreen();
+  String error;
+  AuthenScreen({this.error});
   static const routeName = '/';
   @override
   _AuthenScreenState createState() => _AuthenScreenState();
@@ -422,6 +423,12 @@ class _AuthenScreenState extends State<AuthenScreen> {
   //   log('TOKEN LUU TRONG GET TOKEN : $tokenTmp');
   //   return tokenTmp;
   // }
+
+  @override
+  void initState() {
+    super.initState();
+    log(widget.error.toString());
+  }
 
   @override
   Widget build(BuildContext context) {

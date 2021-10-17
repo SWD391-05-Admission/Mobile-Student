@@ -6,7 +6,7 @@ import 'package:line_icons/line_icons.dart';
 import '../screens/home_screen.dart';
 import '../screens/profile_screen.dart';
 import '../screens/favorite_screen.dart';
-import '../screens/setting_screen.dart';
+import '../screens/book_screen.dart';
 import '../values/app_styles.dart';
 
 class BottomBar extends StatefulWidget {
@@ -65,14 +65,14 @@ class _BottomBarState extends State<BottomBar> {
               ),
               GButton(
                 backgroundColor: Color(0xFFDDDDDD),
-                icon: LineIcons.heart,
+                icon: LineIcons.thumbsUp,
                 text: 'FAVORITE',
                 textStyle: AppStyle.tabbar,
               ),
               GButton(
                 backgroundColor: Color(0xFFDDDDDD),
-                icon: LineIcons.clock,
-                text: 'HISTORY',
+                icon: LineIcons.briefcase,
+                text: 'BOOKED',
                 textStyle: AppStyle.tabbar,
               ),
               GButton(

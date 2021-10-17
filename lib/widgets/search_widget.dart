@@ -25,6 +25,9 @@ class _SearchWidgetState extends State<SearchWidget> {
     final double _sizeHeight = MediaQuery.of(context).size.height -
         MediaQuery.of(context).padding.top -
         MediaQuery.of(context).padding.bottom;
+    final double _sizeWidth = MediaQuery.of(context).size.width -
+        MediaQuery.of(context).padding.left -
+        MediaQuery.of(context).padding.right;
     return Padding(
       padding: const EdgeInsets.only(left: 15, right: 15),
       child: Container(
@@ -67,7 +70,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                   errorBorder: InputBorder.none,
                   disabledBorder: InputBorder.none,
                   contentPadding: EdgeInsets.only(
-                      left: 10, bottom: 15.5, top: 3, right: 10),
+                      left: _sizeWidth * 0.01, bottom: _sizeHeight * 0.012),
                   hintText: " Search",
                   hintStyle:
                       AppStyle.h2.copyWith(color: Colors.black26, fontSize: 15),
@@ -248,7 +251,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                             },
                           );
                         } else if (widget.nameSearch.toLowerCase() ==
-                            'consultant') {
+                            'counselor') {
                           log('vo consultant ne');
                           return showDialog(
                             context: context,
