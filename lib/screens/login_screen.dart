@@ -1,10 +1,8 @@
 import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile_customer/screens/authen_screen.dart';
-import 'package:mobile_customer/screens/profile_screen.dart';
-import 'package:mobile_customer/widgets/bottom_bar_widget.dart';
-import 'package:http/http.dart' as http;
+import '../screens/authen_screen.dart';
+import '../widgets/bottom_bar_widget.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage();
@@ -19,6 +17,16 @@ class LoginPage extends StatelessWidget {
           return Center(child: CircularProgressIndicator());
         } else if (snapshot.hasData) {
           log('snapshot has data'.toUpperCase());
+          // try {
+          //   Authen.authen();
+          //   log('vo try');
+          // } catch (error) {
+          //   if (error.toString() == '') {
+          //     return AuthenScreen(
+          //       error: error.toString(),
+          //     );
+          //   }
+          // }
           return BottomBar();
         } else if (snapshot.hasError) {
           log('snapshot has error'.toUpperCase());

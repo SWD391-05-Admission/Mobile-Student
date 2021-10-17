@@ -21,9 +21,13 @@ class GoogleSignInProvider extends ChangeNotifier {
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-    await FirebaseAuth.instance.signInWithCredential(credential);
+    await FirebaseAuth.instance.signInWithCredential(credential).then((_) {
+      Authen auth = new Authen();
+      log('chay authen');
+      auth.authen();
+      // Authen.authen();
+    });
     log('google user not null'.toUpperCase());
-    Authen.authen();
     notifyListeners();
   }
 

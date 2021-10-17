@@ -2,7 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static const Color primaryColor = Color(0xFF64FFDA);
+  static const Color primaryColor = Color(0xFFFFFFFF);
   // static const Color primaryColor = Color(0xFFAAAAAA);
   static const Color black87 = Colors.black87;
   static const Color black54 = Colors.black54;
@@ -63,6 +63,9 @@ class AppColors {
         tileMode: TileMode.clamp,
       ),
     ),
+  );
+  static Container flexibleSpaceWhite = Container(
+    decoration: BoxDecoration(color: Colors.white),
   );
 
   static BoxDecoration decorationGradient = BoxDecoration(
