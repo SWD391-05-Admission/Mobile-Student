@@ -15,7 +15,7 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
-  List<Talkshow> listTalkshow = Talkshow.createListTalkshow();
+  List<Talkshow> listTalkshow = [];
   @override
   Widget build(BuildContext context) {
     final double _sizeHeight = MediaQuery.of(context).size.height -

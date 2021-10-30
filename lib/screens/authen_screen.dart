@@ -10,8 +10,8 @@ import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
 class AuthenScreen extends StatefulWidget {
-  String error;
-  AuthenScreen({this.error});
+  // String error;
+  // AuthenScreen({this.error});
   static const routeName = '/';
   @override
   _AuthenScreenState createState() => _AuthenScreenState();
@@ -92,6 +92,7 @@ class _AuthenScreenState extends State<AuthenScreen> {
     final double _sizeWidth = MediaQuery.of(context).size.width -
         MediaQuery.of(context).padding.left -
         MediaQuery.of(context).padding.right;
+
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -217,6 +218,7 @@ class _AuthenScreenState extends State<AuthenScreen> {
                             context,
                             listen: false,
                           );
+                          log('VO LOGIN');
                           provider.googleLogin();
                         },
                       ),
@@ -427,11 +429,13 @@ class _AuthenScreenState extends State<AuthenScreen> {
   @override
   void initState() {
     super.initState();
-    log(widget.error.toString());
+    // log(widget.error.toString());
   }
 
   @override
   Widget build(BuildContext context) {
+    // String tmp = ModalRoute.of(context).settings.arguments;
+    // log('asdfasdfasdf $tmp');
     return Container(
       decoration: BoxDecoration(color: Colors.white),
       child: Scaffold(

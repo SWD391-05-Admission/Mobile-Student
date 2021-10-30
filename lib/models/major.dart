@@ -11,13 +11,13 @@ class Major {
     this.listUniversity,
   });
 
-  static Major createMajor() {
-    List<University> listUniversity = University.createListUniversity();
-    Major major = Major(
-      code: 'se',
-      listUniversity: listUniversity,
-      name: 'Software Engineer',
-    );
-    return major;
-  }
+  // static Major createMajor() {
+  //   List<University> listUniversity = University.createListUniversity();
+  //   Major major = Major(
+  //     code: 'se',
+  //     listUniversity: listUniversity,
+  //     name: 'Software Engineer',
+  //   );
+  //   return major;
+  // }
 }

@@ -1,21 +1,18 @@
-import 'dart:convert';
 import 'dart:developer';
-
-// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile_customer/models/counselor.dart';
-import 'package:mobile_customer/models/talkshow.dart';
-import 'package:mobile_customer/models/university.dart';
-import 'package:mobile_customer/models/user.dart';
-import 'package:mobile_customer/providers/auth.dart';
-import 'package:mobile_customer/values/app_colors.dart';
+import 'package:mobile_customer/providers/university_controller.dart';
 import 'package:mobile_customer/values/app_fonts.dart';
-import 'package:mobile_customer/values/app_styles.dart';
+import 'package:mobile_customer/values/app_value.dart';
+import '../widgets/get_list_counselor.dart';
+import '../widgets/get_list_talkshow.dart';
+import '../widgets/get_list_university.dart';
+import '../models/counselor.dart';
+import '../models/talkshow.dart';
+import '../models/university.dart';
+import '../providers/counselor_controller.dart';
+import '../values/app_styles.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:mobile_customer/widgets/carousel_widget.dart';
-import 'package:http/http.dart' as http;
-import 'package:mobile_customer/widgets/search_widget.dart';
-import 'package:mobile_customer/widgets/talkshow_detail_item.dart';
+import '../widgets/carousel_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen();
@@ -25,1737 +22,1507 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final searchController = TextEditingController();
-  String areaDropdow = '',
-      typeDropdown = '',
-      degreeDropdown = '',
-      industryDropdown = '';
-  List<Talkshow> listTalkshow = [];
-  List<User> listConsultant = [];
-  List<University> listUniversity = [];
+  bool isTalkshow = false, isCounselor = true, isUniversity = false;
+  int _currentPage = 1;
+  int _limit = 2;
 
-  final controller = TextEditingController();
-  PageController _pageController;
-  int _currentIndex = 0;
+  Future myFuture;
+
+  Future<Map<String, List<Counselor>>> _getListCounselor(String txtSearch) {
+    String email, name, phone;
+    (_findByEmailCounselor) ? email = txtSearch : email = '';
+    (_findByNameCounselor) ? name = txtSearch : name = '';
+    (_findByPhoneCounselor) ? phone = txtSearch : phone = '';
+
+    return CounselorController()
+        .getListCounselor(email, name, phone, _currentPage, _limit);
+  }
+
+  Future<Map<String, List<University>>> _getListUniversity(String txtSearch) {
+    log('vovovo');
+    return UniversityConntroller()
+        .getListUniversity('', '', '', _currentPage, _limit);
+  }
+
+  Future<List<Talkshow>> _getListTalkshow() {}
+
+  _paging(String numOfPage) {
+    int numPage = int.parse(numOfPage);
+    List<Widget> list = [];
+    if (numPage < 6 && numPage > 1) {
+      for (int i = 1; i < numPage + 1; i++) {
+        list.add(
+          GestureDetector(
+            child: SizedBox(
+              height: 20,
+              width: 20,
+              child: Text(
+                '$i',
+                style: AppStyle.bookDetail.copyWith(
+                  fontSize: 14,
+                  color: (i == _currentPage) ? Colors.black : Colors.black26,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            onTap: () {
+              setState(() {
+                _currentPage = i;
+                myFuture = _getList(txtSearch);
+              });
+            },
+          ),
+        );
+        if (i != numPage) {
+          list.add(SizedBox(
+            width: 5,
+          ));
+        }
+      }
+    } else {}
+    return list;
+  }
+
+  _getList(String txtSearch) {
+    if (isCounselor) {
+      log('vo get cónultant');
+      return _getListCounselor(txtSearch);
+    } else if (isTalkshow) {
+      log('vo get talkshow');
+      return _getListTalkshow;
+    } else {
+      log('vo get university');
+      return _getListUniversity(txtSearch);
+    }
+  }
+
+  final searchController = TextEditingController();
+  String areaDropdow;
+  String typeDropdown;
+  String degreeDropdown;
+  String industryDropdown;
+  bool _findByNameCounselor = true, _tmpFindName = true;
+  bool _findByPhoneCounselor = true, _tmpFindPhone = true;
+  bool _findByEmailCounselor = true, _tmpFindEmail = true;
+  bool _findByMaTruong = true, _tmpFindMaTruong = true;
+  bool _findByTenTruong = true, _tmpFindTenTruong = true;
+  bool _findByEmailTruong = true, _tmpFindEmailTruong = true;
+  bool _findBySdtTruong = true, _tmpFindSdtTruong = true;
+  String txtSearch = '';
+
+  _searchWidget(height, width) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 15, right: 15),
+      child: Container(
+        height: height * 0.055,
+        child: Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 10.5),
+              child: GestureDetector(
+                child: Icon(
+                  Icons.search,
+                  color: Colors.black45,
+                  size: 20,
+                ),
+                onTap: () {
+                  FocusScope.of(context).requestFocus(FocusNode());
+                  print('VALUE search controller : ${searchController.text}');
+                },
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.only(top: 5), // chỉnh sửa search
+                child: TextField(
+                  textAlign: TextAlign.start,
+                  controller: searchController,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    errorBorder: InputBorder.none,
+                    disabledBorder: InputBorder.none,
+                    contentPadding: EdgeInsets.only(
+                        left: width * 0.01, bottom: height * 0.012),
+                    hintText: " Tìm kiếm",
+                    hintStyle: AppStyle.h2
+                        .copyWith(color: Colors.black26, fontSize: 15),
+                  ),
+                  cursorColor: Colors.black12,
+                  cursorWidth: 0.5,
+                  style:
+                      AppStyle.h2.copyWith(color: Colors.black54, fontSize: 15),
+                  onChanged: (value) {
+                    setState(() {
+                      // value = searchController.text;
+                      log('CONTROLLER: ${searchController.text}');
+                      log('VALUE SEARCH: $value');
+                    });
+                  },
+                  onSubmitted: (valueSearch) {
+                    txtSearch = valueSearch;
+                    myFuture = _getList(valueSearch);
+                  },
+                ),
+              ),
+            ),
+            searchController.text.isNotEmpty
+                ? Padding(
+                    padding: const EdgeInsets.only(right: 7.5),
+                    child: GestureDetector(
+                      child: Icon(
+                        Icons.close,
+                        color: Colors.black38,
+                        size: 22,
+                      ),
+                      onTap: () {
+                        FocusScope.of(context).requestFocus(FocusNode());
+                        setState(() {
+                          searchController.clear();
+                        });
+                      },
+                    ),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.only(right: 9),
+                    child: GestureDetector(
+                      // child: Icon(
+                      //   // Icons.drag_indicator_sharp,
+                      //   Icons.filter_list_rounded,
+                      //   color: Colors.black45,
+                      //   size: 22,
+                      // ),
+                      child: ImageIcon(
+                        AssetImage('assets/icons/filter.png'),
+                        size: 22,
+                        color: Colors.black45,
+                      ),
+                      onTap: () {
+                        print('TAP FILTER');
+                        if (isTalkshow) {
+                          log('vo talkshow ne');
+                          return showDialog(
+                            context: context,
+                            builder: (context) {
+                              // String areaDropdow;
+                              return StatefulBuilder(
+                                  builder: (context, setState) {
+                                return SimpleDialog(
+                                  // key: _formKey,
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 20),
+                                      child: Text(
+                                        'Area',
+                                        style: TextStyle(
+                                          fontFamily: AppFonts.poppins,
+                                          fontSize: 18,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(height: height * 0.01),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 20),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            'Area',
+                                            overflow: TextOverflow.ellipsis,
+                                            style: AppStyle.dropdownStyle,
+                                          ),
+                                          Expanded(child: SizedBox()),
+                                          DropdownButtonHideUnderline(
+                                            child: DropdownButton<String>(
+                                              // style: TextSty,
+
+                                              value: areaDropdow,
+                                              items: <String>[
+                                                ...AppValue.listKhuVuc
+                                              ].map((String value) {
+                                                return DropdownMenuItem<String>(
+                                                  value: value,
+                                                  child: Row(
+                                                    children: [
+                                                      SizedBox(
+                                                        width: 140,
+                                                        child: Text(
+                                                          value,
+                                                          textAlign:
+                                                              TextAlign.right,
+                                                          style: AppStyle
+                                                              .dropdownStyle,
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 3,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                );
+                                              }).toList(),
+                                              onChanged: (newValue) {
+                                                setState(() {
+                                                  areaDropdow = newValue;
+                                                  log('Khu vuc ne: $areaDropdow');
+                                                  log('Khu vuc newValue ne: $newValue');
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(height: height * 0.03),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 20),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          ElevatedButton(
+                                            child: Text('Cancle'),
+                                            onPressed: () {
+                                              print('TAP HUY BO');
+                                              areaDropdow = null;
+                                              typeDropdown = null;
+                                              degreeDropdown = null;
+                                              industryDropdown = null;
+                                              Navigator.of(context).pop();
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              primary: Color(0xFFEEEEEEE),
+                                              // elevation: 1,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 10,
+                                            // height: 1,
+                                          ),
+                                          ElevatedButton(
+                                            child: Text('Apply'),
+                                            onPressed: () {
+                                              log('TAP AP DUNG');
+
+                                              // FocusScope.of(context)
+                                              //     .requestFocus(FocusNode());
+                                              Navigator.of(context).pop();
+                                            },
+                                            style: ElevatedButton.styleFrom(
+                                              primary: Color(0xFFEEEEEEE),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              });
+                            },
+                          );
+                        } else if (isCounselor) {
+                          log('vo consultant ne');
+                          return showDialog(
+                            context: context,
+                            builder: (context) {
+                              // String areaDropdow;
+                              return StatefulBuilder(
+                                builder: (context, setState) {
+                                  return SimpleDialog(
+                                    // key: _formKey,
+                                    children: <Widget>[
+                                      SizedBox(
+                                        height: height * 0.01,
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20),
+                                        child: Text(
+                                          'Bộ lọc tìm kiếm',
+                                          style: AppStyle.titleSearch.copyWith(
+                                            fontSize: 20,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                      SizedBox(height: height * 0.015),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 20, right: 8),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              'Tìm bằng họ tên',
+                                              overflow: TextOverflow.ellipsis,
+                                              style:
+                                                  AppStyle.bookDetail.copyWith(
+                                                fontSize: 13,
+                                              ),
+                                            ),
+                                            Expanded(child: SizedBox()),
+                                            Checkbox(
+                                              value: _findByNameCounselor,
+                                              onChanged: (newValue) {
+                                                log(newValue.toString());
+                                                setState(() {
+                                                  _findByNameCounselor =
+                                                      newValue;
+                                                });
+                                              },
+                                              checkColor: Colors.white,
+                                              activeColor: Colors.green,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 20, right: 8),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              'Tìm bằng địa chỉ email',
+                                              overflow: TextOverflow.ellipsis,
+                                              style:
+                                                  AppStyle.bookDetail.copyWith(
+                                                fontSize: 13,
+                                              ),
+                                            ),
+                                            Expanded(child: SizedBox()),
+                                            Checkbox(
+                                              value: _findByEmailCounselor,
+                                              onChanged: (newValue) {
+                                                log(newValue.toString());
+                                                setState(() {
+                                                  _findByEmailCounselor =
+                                                      newValue;
+                                                });
+                                              },
+                                              checkColor: Colors.white,
+                                              activeColor: Colors.green,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 20, right: 8),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              'Tìm bằng số điện thoại',
+                                              overflow: TextOverflow.ellipsis,
+                                              style:
+                                                  AppStyle.bookDetail.copyWith(
+                                                fontSize: 13,
+                                              ),
+                                            ),
+                                            Expanded(child: SizedBox()),
+                                            Checkbox(
+                                              value: _findByPhoneCounselor,
+                                              onChanged: (newValue) {
+                                                log(newValue.toString());
+                                                setState(() {
+                                                  _findByPhoneCounselor =
+                                                      newValue;
+                                                });
+                                              },
+                                              checkColor: Colors.white,
+                                              activeColor: Colors.green,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(height: height * 0.01),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            ElevatedButton(
+                                              child: Text(
+                                                'Hủy bỏ',
+                                                style: TextStyle(
+                                                  fontFamily:
+                                                      AppFonts.montserrat,
+                                                ),
+                                              ),
+                                              onPressed: () {
+                                                // _findByEmailCounselor = false;
+                                                // _findByNameCounselor = false;
+                                                // _findByPhoneCounselor = false;
+                                                (_tmpFindEmail)
+                                                    ? _findByEmailCounselor =
+                                                        true
+                                                    : _findByEmailCounselor =
+                                                        false;
+                                                (_tmpFindName)
+                                                    ? _findByNameCounselor =
+                                                        true
+                                                    : _findByNameCounselor =
+                                                        false;
+                                                (_tmpFindPhone)
+                                                    ? _findByPhoneCounselor =
+                                                        true
+                                                    : _findByPhoneCounselor =
+                                                        false;
+                                                Navigator.of(context).pop();
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                primary: Color(0xFFEEEEEEE),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 10,
+                                              // height: 1,
+                                            ),
+                                            ElevatedButton(
+                                              child: Text(
+                                                'Áp dụng',
+                                                style: TextStyle(
+                                                  fontFamily:
+                                                      AppFonts.montserrat,
+                                                ),
+                                              ),
+                                              onPressed: () {
+                                                log('TAP AP DUNG email : $_findByEmailCounselor');
+                                                log('TAP AP DUNG phone : $_findByPhoneCounselor');
+                                                log('TAP AP DUNG name : $_findByNameCounselor');
+
+                                                // FocusScope.of(context)
+                                                //     .requestFocus(FocusNode());
+                                                Navigator.of(context).pop();
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                primary: Color(0xFFEEEEEEE),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                          );
+                        } else {
+                          log('vo univesity ne');
+                          return showDialog(
+                            context: context,
+                            builder: (context) {
+                              // String areaDropdow;
+                              return StatefulBuilder(
+                                builder: (context, setState) {
+                                  return SimpleDialog(
+                                    // key: _formKey,
+                                    children: <Widget>[
+                                      SizedBox(
+                                        height: height * 0.01,
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20),
+                                        child: Text(
+                                          'Bộ lọc tìm kiếm',
+                                          style: AppStyle.titleSearch.copyWith(
+                                            fontSize: 20,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                      SizedBox(height: height * 0.015),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 20, right: 8),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              'Tìm bằng mã trường',
+                                              overflow: TextOverflow.ellipsis,
+                                              style:
+                                                  AppStyle.bookDetail.copyWith(
+                                                fontSize: 13,
+                                              ),
+                                            ),
+                                            Expanded(child: SizedBox()),
+                                            Checkbox(
+                                              value: _findByMaTruong,
+                                              onChanged: (newValue) {
+                                                log(newValue.toString());
+                                                setState(() {
+                                                  _findByMaTruong = newValue;
+                                                });
+                                              },
+                                              checkColor: Colors.white,
+                                              activeColor: Colors.green,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 20, right: 8),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              'Tìm bằng tên trường',
+                                              overflow: TextOverflow.ellipsis,
+                                              style:
+                                                  AppStyle.bookDetail.copyWith(
+                                                fontSize: 13,
+                                              ),
+                                            ),
+                                            Expanded(child: SizedBox()),
+                                            Checkbox(
+                                              value: _findByTenTruong,
+                                              onChanged: (newValue) {
+                                                log(newValue.toString());
+                                                setState(() {
+                                                  _findByTenTruong = newValue;
+                                                });
+                                              },
+                                              checkColor: Colors.white,
+                                              activeColor: Colors.green,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 20, right: 8),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              'Tìm bằng địa chỉ email',
+                                              overflow: TextOverflow.ellipsis,
+                                              style:
+                                                  AppStyle.bookDetail.copyWith(
+                                                fontSize: 13,
+                                              ),
+                                            ),
+                                            Expanded(child: SizedBox()),
+                                            Checkbox(
+                                              value: _findByEmailTruong,
+                                              onChanged: (newValue) {
+                                                log(newValue.toString());
+                                                setState(() {
+                                                  _findByEmailTruong = newValue;
+                                                });
+                                              },
+                                              checkColor: Colors.white,
+                                              activeColor: Colors.green,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 20, right: 8),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              'Tìm bằng số điện thoại',
+                                              overflow: TextOverflow.ellipsis,
+                                              style:
+                                                  AppStyle.bookDetail.copyWith(
+                                                fontSize: 13,
+                                              ),
+                                            ),
+                                            Expanded(child: SizedBox()),
+                                            Checkbox(
+                                              value: _findBySdtTruong,
+                                              onChanged: (newValue) {
+                                                log(newValue.toString());
+                                                setState(() {
+                                                  _findBySdtTruong = newValue;
+                                                });
+                                              },
+                                              checkColor: Colors.white,
+                                              activeColor: Colors.green,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(height: height * 0.01),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            ElevatedButton(
+                                              child: Text(
+                                                'Hủy bỏ',
+                                                style: TextStyle(
+                                                  fontFamily:
+                                                      AppFonts.montserrat,
+                                                ),
+                                              ),
+                                              onPressed: () {
+                                                // _findByEmailCounselor = false;
+                                                // _findByNameCounselor = false;
+                                                // _findByPhoneCounselor = false;
+                                                (_tmpFindEmailTruong)
+                                                    ? _findByEmailTruong = true
+                                                    : _findByEmailTruong =
+                                                        false;
+                                                (_tmpFindTenTruong)
+                                                    ? _findByTenTruong = true
+                                                    : _findByTenTruong = false;
+                                                (_tmpFindSdtTruong)
+                                                    ? _findBySdtTruong = true
+                                                    : _findBySdtTruong = false;
+                                                (_tmpFindMaTruong)
+                                                    ? _findByMaTruong = true
+                                                    : _findByMaTruong = false;
+                                                Navigator.of(context).pop();
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                primary: Color(0xFFEEEEEEE),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 10,
+                                              // height: 1,
+                                            ),
+                                            ElevatedButton(
+                                              child: Text(
+                                                'Áp dụng',
+                                                style: TextStyle(
+                                                  fontFamily:
+                                                      AppFonts.montserrat,
+                                                ),
+                                              ),
+                                              onPressed: () {
+                                                log('TAP AP DUNG email : $_findByEmailCounselor');
+                                                log('TAP AP DUNG phone : $_findByPhoneCounselor');
+                                                log('TAP AP DUNG name : $_findByNameCounselor');
+
+                                                // FocusScope.of(context)
+                                                //     .requestFocus(FocusNode());
+                                                Navigator.of(context).pop();
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                primary: Color(0xFFEEEEEEE),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                          );
+                        }
+                      },
+                    ),
+                  ),
+          ],
+        ),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.black87, width: 0.1),
+          borderRadius: BorderRadius.circular(5),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Color(0xFF999999).withOpacity(0.6),
+              blurRadius: 8,
+            )
+          ],
+        ),
+      ),
+    );
+  }
 
   @override
   void initState() {
-    _pageController = PageController(
-      viewportFraction: 0.95,
-    );
+    myFuture = _getList('');
     super.initState();
-  }
-
-  bool isTalkshow = true, isConsultant = false, isUniversity = false;
-
-  List<Widget> getListTalkshow(List<Talkshow> list, double sizeHeight) {
-    List<Widget> listWidget = [];
-    listWidget.add(SearchWidget(nameSearch: 'talkshow'));
-    listWidget.add(SizedBox(height: sizeHeight * 0.015));
-    listWidget.add(
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 170),
-        child: Divider(
-          color: Colors.black38,
-        ),
-      ),
-    );
-    listWidget.add(SizedBox(height: sizeHeight * 0.015));
-    for (int i = 0; i < list.length; i++) {
-      listWidget.add(
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: Column(
-            children: [
-              GestureDetector(
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        blurRadius: 7,
-                        color: Color(0xFFBBBBBB),
-                      )
-                    ],
-                    border: Border.all(width: 0.05, color: Colors.black),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ClipRRect(
-                        // borderRadius: BorderRadius.circular(4.0),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(4),
-                          topRight: Radius.circular(4),
-                        ),
-                        child: Image.network(list[i].image),
-                      ),
-                      SizedBox(
-                        height: sizeHeight * 0.01,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: Text(
-                          '${list[i].description}',
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: AppStyle.bookDetail,
-                        ),
-                      ),
-                      SizedBox(
-                        height: sizeHeight * 0.003,
-                      ),
-                      // Padding(
-                      //   padding: const EdgeInsets.only(left: 10, right: 10),
-                      //   child: Text(
-                      //     'Counselor : ${list[i].counselor.fullName}',
-                      //     overflow: TextOverflow.ellipsis,
-                      //     style: AppStyle.bookDetail,
-                      //   ),
-                      // ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: RichText(
-                          text: TextSpan(
-                            text: 'Counselor : ',
-                            style: AppStyle.bookDetail.copyWith(
-                              color: Colors.black,
-                            ),
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: '${list[i].counselor.fullName}',
-                                style: TextStyle(
-                                  fontFamily: AppFonts.poppins,
-                                  fontSize: 12,
-                                  shadows: [
-                                    Shadow(
-                                      // offset: Offset(1.0, 1.0),
-                                      blurRadius: 8,
-                                      color: Color(0xFF999999),
-                                    ),
-                                  ],
-                                  fontWeight: FontWeight.bold,
-                                  // fontStyle: FontStyle.italic,
-                                ),
-                              ),
-                              // TextSpan(text: ' world!'),
-                            ],
-                          ),
-                        ),
-                      ),
-                      // Padding(
-                      //   padding: const EdgeInsets.only(left: 10, right: 10),
-                      //   child: Text(
-                      //     'Price : ${list[i].price.toString()}',
-                      //     maxLines: 2,
-                      //     overflow: TextOverflow.ellipsis,
-                      //     style: AppStyle.bookDetail,
-                      //   ),
-                      // ),
-                      SizedBox(
-                        height: sizeHeight * 0.003,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: RichText(
-                          text: TextSpan(
-                            text: 'Date time : ',
-                            style: AppStyle.bookDetail.copyWith(
-                              color: Colors.black,
-                            ),
-                            children: <TextSpan>[
-                              TextSpan(
-                                text:
-                                    'at ${list[i].timeStart} - ${list[i].timeFinish} ${list[i].date}',
-                                style: TextStyle(
-                                  fontFamily: AppFonts.poppins,
-                                  fontSize: 12,
-                                  shadows: [
-                                    Shadow(
-                                      // offset: Offset(1.0, 1.0),
-                                      blurRadius: 8,
-                                      color: Color(0xFF999999),
-                                    ),
-                                  ],
-                                  fontWeight: FontWeight.bold,
-                                  // fontStyle: FontStyle.italic,
-                                ),
-                              ),
-                              // TextSpan(text: ' world!'),
-                            ],
-                          ),
-                        ),
-                      ),
-                      // Padding(
-                      //   padding: const EdgeInsets.only(left: 10, right: 10),
-                      //   child: Text(
-                      //     'Major : ${list[i].major.name}',
-                      //     overflow: TextOverflow.ellipsis,
-                      //     style: AppStyle.bookDetail,
-                      //   ),
-                      // ),
-                      SizedBox(
-                        height: sizeHeight * 0.003,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: RichText(
-                          text: TextSpan(
-                            text: 'Major : ',
-                            style: AppStyle.bookDetail.copyWith(
-                              color: Colors.black,
-                            ),
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: '${list[i].major.name}',
-                                style: TextStyle(
-                                  fontFamily: AppFonts.poppins,
-                                  fontSize: 12,
-                                  shadows: [
-                                    Shadow(
-                                      // offset: Offset(1.0, 1.0),
-                                      blurRadius: 8,
-                                      color: Color(0xFF999999),
-                                    ),
-                                  ],
-                                  fontWeight: FontWeight.bold,
-                                  // fontStyle: FontStyle.italic,
-                                ),
-                              ),
-                              // TextSpan(text: ' world!'),
-                            ],
-                          ),
-                        ),
-                      ),
-                      // Padding(
-                      //   padding: const EdgeInsets.only(left: 10, right: 10),
-                      //   child: Text(
-                      //     'Date time : ${list[i].timeStart} - ${list[i].timeFinish} ${list[i].date}',
-                      //     maxLines: 2,
-                      //     overflow: TextOverflow.ellipsis,
-                      //     style: AppStyle.bookDetail,
-                      //   ),
-                      // ),
-                      SizedBox(
-                        height: sizeHeight * 0.003,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: Row(
-                          children: [
-                            RichText(
-                              text: TextSpan(
-                                text: 'Price : ',
-                                style: AppStyle.bookDetail.copyWith(
-                                  color: Colors.black,
-                                ),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                    text: '${list[i].price}',
-                                    style: TextStyle(
-                                      fontFamily: AppFonts.poppins,
-                                      fontSize: 12,
-                                      shadows: [
-                                        Shadow(
-                                          // offset: Offset(1.0, 1.0),
-                                          blurRadius: 8,
-                                          color: Color(0xFF999999),
-                                        ),
-                                      ],
-                                      fontWeight: FontWeight.bold,
-                                      // fontStyle: FontStyle.italic,
-                                    ),
-                                  ),
-                                  // TextSpan(text: ' world!'),
-                                ],
-                              ),
-                            ),
-                            Expanded(child: SizedBox()),
-                            GestureDetector(
-                              child: Text(
-                                'See Detail >>',
-                                style: AppStyle.bookDetail,
-                              ),
-                              onTap: () {
-                                Navigator.of(context).pushNamed(
-                                    '/talkshow-detail-screen',
-                                    arguments: list[i]);
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: sizeHeight * 0.01,
-                      ),
-                    ],
-                  ),
-                ),
-                onTap: () {
-                  Navigator.of(context)
-                      .pushNamed('/talkshow-detail-screen', arguments: list[i]);
-                },
-              ),
-              SizedBox(height: sizeHeight * 0.045),
-            ],
-          ),
-        ),
-      );
-    }
-    return listWidget;
-  }
-
-  // List<Widget> getListConsultant(List<User> list, double sizeHeight) {
-  //   List<Widget> listWidget = [];
-  //   listWidget.add(SearchWidget(nameSearch: 'consultant'));
-  //   listWidget.add(SizedBox(height: sizeHeight * 0.015));
-  //   listWidget.add(
-  //     Padding(
-  //       padding: const EdgeInsets.symmetric(horizontal: 170),
-  //       child: Divider(
-  //         color: Colors.black38,
-  //       ),
-  //     ),
-  //   );
-  //   listWidget.add(SizedBox(height: sizeHeight * 0.015));
-  //   for (int i = 0; i < list.length; i++) {
-  //     listWidget.add(
-  //       Padding(
-  //         padding: const EdgeInsets.symmetric(horizontal: 15),
-  //         child: Column(
-  //           children: [
-  //             GestureDetector(
-  //               child: Container(
-  //                 decoration: BoxDecoration(
-  //                   borderRadius: BorderRadius.circular(5),
-  //                   color: Colors.white,
-  //                   boxShadow: [
-  //                     BoxShadow(
-  //                       blurRadius: 7,
-  //                       color: Color(0xFFBBBBBB),
-  //                     )
-  //                   ],
-  //                   border: Border.all(width: 0.05, color: Colors.black),
-  //                 ),
-  //                 child: Column(
-  //                   children: [
-  //                     ClipRRect(
-  //                       // borderRadius: BorderRadius.circular(4.0),
-  //                       borderRadius: BorderRadius.only(
-  //                           topLeft: Radius.circular(4),
-  //                           topRight: Radius.circular(4)),
-  //                       child: Image.network(list[i].image),
-  //                     ),
-  //                     Text(list[i].description),
-  //                     Text(list[i].address),
-  //                     Text(list[i].email),
-  //                     Text(list[i].fullName),
-  //                     Text(list[i].gender),
-  //                     Text(list[i].phone),
-  //                   ],
-  //                 ),
-  //               ),
-  //               onTap: () {
-  //                 Navigator.of(context).pushNamed('/consultant-detail-screen',
-  //                     arguments: list[i]);
-  //               },
-  //             ),
-  //             SizedBox(height: sizeHeight * 0.04),
-  //           ],
-  //         ),
-  //       ),
-  //     );
-  //   }
-  //   return listWidget;
-  // }
-  List<Widget> getListCounselor(List<Counselor> list, double sizeHeight) {
-    List<Widget> listWidget = [];
-    listWidget.add(SearchWidget(nameSearch: 'counselor'));
-    listWidget.add(SizedBox(height: sizeHeight * 0.015));
-    listWidget.add(
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 170),
-        child: Divider(
-          color: Colors.black38,
-        ),
-      ),
-    );
-    listWidget.add(SizedBox(height: sizeHeight * 0.015));
-    for (int i = 0; i < list.length; i++) {
-      listWidget.add(
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: Column(
-            children: [
-              GestureDetector(
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        blurRadius: 7,
-                        color: Color(0xFFBBBBBB),
-                      )
-                    ],
-                    border: Border.all(width: 0.05, color: Colors.black),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ClipRRect(
-                        // borderRadius: BorderRadius.circular(4.0),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(4),
-                          topRight: Radius.circular(4),
-                        ),
-                        child: Image.network(list[i].image),
-                      ),
-                      SizedBox(
-                        height: sizeHeight * 0.01,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: Text(
-                          '${list[i].description}',
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: AppStyle.bookDetail,
-                        ),
-                      ),
-                      // Padding(
-                      //   padding: const EdgeInsets.only(left: 10, right: 10),
-                      //   child: Text(
-                      //     'Counselor : ${list[i].counselor.fullName}',
-                      //     overflow: TextOverflow.ellipsis,
-                      //     style: AppStyle.bookDetail,
-                      //   ),
-                      // ),
-                      SizedBox(
-                        height: sizeHeight * 0.003,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: RichText(
-                          text: TextSpan(
-                            text: 'Name : ',
-                            style: AppStyle.bookDetail.copyWith(
-                              color: Colors.black,
-                            ),
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: '${list[i].fullName}',
-                                style: TextStyle(
-                                  fontFamily: AppFonts.poppins,
-                                  fontSize: 12,
-                                  shadows: [
-                                    Shadow(
-                                      // offset: Offset(1.0, 1.0),
-                                      blurRadius: 8,
-                                      color: Color(0xFF999999),
-                                    ),
-                                  ],
-                                  fontWeight: FontWeight.bold,
-                                  // fontStyle: FontStyle.italic,
-                                ),
-                              ),
-                              // TextSpan(text: ' world!'),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: sizeHeight * 0.003,
-                      ),
-                      // Padding(
-                      //   padding: const EdgeInsets.only(left: 10, right: 10),
-                      //   child: Text(
-                      //     'Price : ${list[i].price.toString()}',
-                      //     maxLines: 2,
-                      //     overflow: TextOverflow.ellipsis,
-                      //     style: AppStyle.bookDetail,
-                      //   ),
-                      // ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: RichText(
-                          text: TextSpan(
-                            text: 'Email : ',
-                            style: AppStyle.bookDetail.copyWith(
-                              color: Colors.black,
-                            ),
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: '${list[i].email}',
-                                style: TextStyle(
-                                  fontFamily: AppFonts.poppins,
-                                  fontSize: 12,
-                                  shadows: [
-                                    Shadow(
-                                      // offset: Offset(1.0, 1.0),
-                                      blurRadius: 8,
-                                      color: Color(0xFF999999),
-                                    ),
-                                  ],
-                                  fontWeight: FontWeight.bold,
-                                  // fontStyle: FontStyle.italic,
-                                ),
-                              ),
-                              // TextSpan(text: ' world!'),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: sizeHeight * 0.003,
-                      ),
-                      // Padding(
-                      //   padding: const EdgeInsets.only(left: 10, right: 10),
-                      //   child: Text(
-                      //     'Major : ${list[i].major.name}',
-                      //     overflow: TextOverflow.ellipsis,
-                      //     style: AppStyle.bookDetail,
-                      //   ),
-                      // ),
-
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: RichText(
-                          text: TextSpan(
-                            text: 'Address : ',
-                            style: AppStyle.bookDetail.copyWith(
-                              color: Colors.black,
-                            ),
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: '${list[i].address}',
-                                style: TextStyle(
-                                  fontFamily: AppFonts.poppins,
-                                  fontSize: 12,
-                                  shadows: [
-                                    Shadow(
-                                      // offset: Offset(1.0, 1.0),
-                                      blurRadius: 8,
-                                      color: Color(0xFF999999),
-                                    ),
-                                  ],
-                                  fontWeight: FontWeight.bold,
-                                  // fontStyle: FontStyle.italic,
-                                ),
-                              ),
-                              // TextSpan(text: ' world!'),
-                            ],
-                          ),
-                        ),
-                      ),
-                      // Padding(
-                      //   padding: const EdgeInsets.only(left: 10, right: 10),
-                      //   child: Text(
-                      //     'Date time : ${list[i].timeStart} - ${list[i].timeFinish} ${list[i].date}',
-                      //     maxLines: 2,
-                      //     overflow: TextOverflow.ellipsis,
-                      //     style: AppStyle.bookDetail,
-                      //   ),
-                      // ),
-                      SizedBox(
-                        height: sizeHeight * 0.003,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: Row(
-                          children: [
-                            RichText(
-                              text: TextSpan(
-                                text: 'Phone : ',
-                                style: AppStyle.bookDetail.copyWith(
-                                  color: Colors.black,
-                                ),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                    text: '${list[i].phone}',
-                                    style: TextStyle(
-                                      fontFamily: AppFonts.poppins,
-                                      fontSize: 12,
-                                      shadows: [
-                                        Shadow(
-                                          // offset: Offset(1.0, 1.0),
-                                          blurRadius: 8,
-                                          color: Color(0xFF999999),
-                                        ),
-                                      ],
-                                      fontWeight: FontWeight.bold,
-                                      // fontStyle: FontStyle.italic,
-                                    ),
-                                  ),
-                                  // TextSpan(text: ' world!'),
-                                ],
-                              ),
-                            ),
-                            Expanded(child: SizedBox()),
-                            GestureDetector(
-                              child: Text(
-                                'See Detail >>',
-                                style: AppStyle.bookDetail,
-                              ),
-                              onTap: () {
-                                Navigator.of(context).pushNamed(
-                                    '/counselor-detail-screen',
-                                    arguments: list[i]);
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: sizeHeight * 0.01,
-                      ),
-                    ],
-                  ),
-                ),
-                onTap: () {
-                  Navigator.of(context).pushNamed('/counselor-detail-screen',
-                      arguments: list[i]);
-                },
-              ),
-              SizedBox(height: sizeHeight * 0.045),
-            ],
-          ),
-        ),
-      );
-    }
-    return listWidget;
-  }
-
-  // List<Widget> getListUniversity(List<University> list, double sizeHeight) {
-  //   List<Widget> listWidget = [];
-  //   listWidget.add(SearchWidget(nameSearch: 'university'));
-  //   listWidget.add(SizedBox(height: sizeHeight * 0.015));
-  //   listWidget.add(
-  //     Padding(
-  //       padding: const EdgeInsets.symmetric(horizontal: 170),
-  //       child: Divider(
-  //         color: Colors.black38,
-  //       ),
-  //     ),
-  //   );
-  //   listWidget.add(SizedBox(height: sizeHeight * 0.015));
-  //   for (int i = 0; i < list.length; i++) {
-  //     listWidget.add(
-  //       Padding(
-  //         padding: const EdgeInsets.symmetric(horizontal: 15),
-  //         child: Column(
-  //           children: [
-  //             GestureDetector(
-  //               child: Container(
-  //                 decoration: BoxDecoration(
-  //                   borderRadius: BorderRadius.circular(5),
-  //                   color: Colors.white,
-  //                   boxShadow: [
-  //                     BoxShadow(
-  //                       blurRadius: 7,
-  //                       color: Color(0xFFBBBBBB),
-  //                     )
-  //                   ],
-  //                   border: Border.all(width: 0.05, color: Colors.black),
-  //                 ),
-  //                 child: Column(
-  //                   children: [
-  //                     ClipRRect(
-  //                       // borderRadius: BorderRadius.circular(4.0),
-  //                       borderRadius: BorderRadius.only(
-  //                           topLeft: Radius.circular(4),
-  //                           topRight: Radius.circular(4)),
-  //                       child: Image.network(list[i].image),
-  //                     ),
-  //                     Text(list[i].description),
-  //                     Text(list[i].code),
-  //                     Text(list[i].email),
-  //                     Text(list[i].facebook),
-  //                     Text(list[i].website),
-  //                     Text(list[i].name),
-  //                   ],
-  //                 ),
-  //               ),
-  //               onTap: () {
-  //                 Navigator.of(context).pushNamed('/university-detail-screen',
-  //                     arguments: list[i]);
-  //               },
-  //             ),
-  //             SizedBox(height: sizeHeight * 0.04),
-  //           ],
-  //         ),
-  //       ),
-  //     );
-  //   }
-  //   return listWidget;
-  // }
-  List<Widget> getListUniversity(List<University> list, double sizeHeight) {
-    List<Widget> listWidget = [];
-    listWidget.add(SearchWidget(nameSearch: 'university'));
-    listWidget.add(SizedBox(height: sizeHeight * 0.015));
-    listWidget.add(
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 170),
-        child: Divider(
-          color: Colors.black38,
-        ),
-      ),
-    );
-    listWidget.add(SizedBox(height: sizeHeight * 0.015));
-    for (int i = 0; i < list.length; i++) {
-      listWidget.add(
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: Column(
-            children: [
-              GestureDetector(
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        blurRadius: 7,
-                        color: Color(0xFFBBBBBB),
-                      )
-                    ],
-                    border: Border.all(width: 0.05, color: Colors.black),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ClipRRect(
-                        // borderRadius: BorderRadius.circular(4.0),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(4),
-                          topRight: Radius.circular(4),
-                        ),
-                        child: Image.network(list[i].image),
-                      ),
-                      SizedBox(
-                        height: sizeHeight * 0.01,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: Text(
-                          '${list[i].description}',
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: AppStyle.bookDetail,
-                        ),
-                      ),
-                      // Padding(
-                      //   padding: const EdgeInsets.only(left: 10, right: 10),
-                      //   child: Text(
-                      //     'Counselor : ${list[i].counselor.fullName}',
-                      //     overflow: TextOverflow.ellipsis,
-                      //     style: AppStyle.bookDetail,
-                      //   ),
-                      // ),
-                      SizedBox(
-                        height: sizeHeight * 0.003,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: RichText(
-                          text: TextSpan(
-                            text: 'University code : ',
-                            style: AppStyle.bookDetail.copyWith(
-                              color: Colors.black,
-                            ),
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: '${list[i].code}',
-                                style: TextStyle(
-                                  fontFamily: AppFonts.poppins,
-                                  fontSize: 12,
-                                  shadows: [
-                                    Shadow(
-                                      // offset: Offset(1.0, 1.0),
-                                      blurRadius: 8,
-                                      color: Color(0xFF999999),
-                                    ),
-                                  ],
-                                  fontWeight: FontWeight.bold,
-                                  // fontStyle: FontStyle.italic,
-                                ),
-                              ),
-                              // TextSpan(text: ' world!'),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: sizeHeight * 0.003,
-                      ),
-                      // Padding(
-                      //   padding: const EdgeInsets.only(left: 10, right: 10),
-                      //   child: Text(
-                      //     'Price : ${list[i].price.toString()}',
-                      //     maxLines: 2,
-                      //     overflow: TextOverflow.ellipsis,
-                      //     style: AppStyle.bookDetail,
-                      //   ),
-                      // ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: RichText(
-                          text: TextSpan(
-                            text: 'Name : ',
-                            style: AppStyle.bookDetail.copyWith(
-                              color: Colors.black,
-                            ),
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: '${list[i].name}',
-                                style: TextStyle(
-                                  fontFamily: AppFonts.poppins,
-                                  fontSize: 12,
-                                  shadows: [
-                                    Shadow(
-                                      // offset: Offset(1.0, 1.0),
-                                      blurRadius: 8,
-                                      color: Color(0xFF999999),
-                                    ),
-                                  ],
-                                  fontWeight: FontWeight.bold,
-                                  // fontStyle: FontStyle.italic,
-                                ),
-                              ),
-                              // TextSpan(text: ' world!'),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: sizeHeight * 0.003,
-                      ),
-                      // Padding(
-                      //   padding: const EdgeInsets.only(left: 10, right: 10),
-                      //   child: Text(
-                      //     'Major : ${list[i].major.name}',
-                      //     overflow: TextOverflow.ellipsis,
-                      //     style: AppStyle.bookDetail,
-                      //   ),
-                      // ),
-
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: RichText(
-                          text: TextSpan(
-                            text: 'Email : ',
-                            style: AppStyle.bookDetail.copyWith(
-                              color: Colors.black,
-                            ),
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: '${list[i].email}',
-                                style: TextStyle(
-                                  fontFamily: AppFonts.poppins,
-                                  fontSize: 12,
-                                  shadows: [
-                                    Shadow(
-                                      // offset: Offset(1.0, 1.0),
-                                      blurRadius: 8,
-                                      color: Color(0xFF999999),
-                                    ),
-                                  ],
-                                  fontWeight: FontWeight.bold,
-                                  // fontStyle: FontStyle.italic,
-                                ),
-                              ),
-                              // TextSpan(text: ' world!'),
-                            ],
-                          ),
-                        ),
-                      ),
-                      // Padding(
-                      //   padding: const EdgeInsets.only(left: 10, right: 10),
-                      //   child: Text(
-                      //     'Date time : ${list[i].timeStart} - ${list[i].timeFinish} ${list[i].date}',
-                      //     maxLines: 2,
-                      //     overflow: TextOverflow.ellipsis,
-                      //     style: AppStyle.bookDetail,
-                      //   ),
-                      // ),
-                      SizedBox(
-                        height: sizeHeight * 0.003,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: Row(
-                          children: [
-                            RichText(
-                              text: TextSpan(
-                                text: 'Facebook : ',
-                                style: AppStyle.bookDetail.copyWith(
-                                  color: Colors.black,
-                                ),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                    text: '${list[i].facebook}',
-                                    style: TextStyle(
-                                      fontFamily: AppFonts.poppins,
-                                      fontSize: 12,
-                                      shadows: [
-                                        Shadow(
-                                          // offset: Offset(1.0, 1.0),
-                                          blurRadius: 8,
-                                          color: Color(0xFF999999),
-                                        ),
-                                      ],
-                                      fontWeight: FontWeight.bold,
-                                      // fontStyle: FontStyle.italic,
-                                    ),
-                                  ),
-                                  // TextSpan(text: ' world!'),
-                                ],
-                              ),
-                            ),
-                            Expanded(child: SizedBox()),
-                            GestureDetector(
-                              child: Text(
-                                'See Detail >>',
-                                style: AppStyle.bookDetail,
-                              ),
-                              onTap: () {
-                                Navigator.of(context).pushNamed(
-                                    '/university-detail-screen',
-                                    arguments: list[i]);
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: sizeHeight * 0.01,
-                      ),
-                    ],
-                  ),
-                ),
-                onTap: () {
-                  Navigator.of(context).pushNamed('/university-detail-screen',
-                      arguments: list[i]);
-                },
-              ),
-              SizedBox(height: sizeHeight * 0.045),
-            ],
-          ),
-        ),
-      );
-    }
-    return listWidget;
   }
 
   @override
   Widget build(BuildContext context) {
-    final double _sizeHeight = MediaQuery.of(context).size.height -
-        MediaQuery.of(context).padding.top -
-        MediaQuery.of(context).padding.bottom;
-    final double _sizeWidth = MediaQuery.of(context).size.width -
-        MediaQuery.of(context).padding.left -
-        MediaQuery.of(context).padding.right;
-    List<University> listUniversity = [];
-    listUniversity = University.createListUniversity();
-    List<Talkshow> listTalkshow = [];
-    listTalkshow = Talkshow.createListTalkshow();
-    List<Counselor> listCounselor = [];
-    listCounselor = Counselor.createListCounselor();
-    // final universityData = Provider.of<Universities>(context);
-    // final universities = universityData.items;
-    // ================================================
-    // return ListView(
-    //   children: [
-    //     CarouselWidget(),
-    //     SizedBox(
-    //       height: _sizeHeight * 0.028,
-    //     ),
-    //     Padding(
-    //       padding: const EdgeInsets.symmetric(horizontal: 15),
-    //       child: Row(
-    //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //         children: [
-    //           Expanded(
-    //             child: GestureDetector(
-    //               child: Container(
-    //                 child: Padding(
-    //                   padding: const EdgeInsets.only(
-    //                       left: 10, right: 10, top: 6, bottom: 6),
-    //                   child: Text(
-    //                     'Talkshows',
-    //                     textAlign: TextAlign.center,
-    //                     style: AppStyle.typeSearch,
-    //                   ),
-    //                 ),
-    //                 decoration: BoxDecoration(
-    //                   borderRadius: BorderRadius.circular(5),
-    //                   boxShadow: [
-    //                     BoxShadow(
-    //                       // offset: Offset(1.0, 1.0),
-    //                       blurRadius: 8,
-    //                       color: Color(0xFF999999).withOpacity(0.5),
-    //                     )
-    //                   ],
-    //                   // color: Color(0xFF4DF2E1),
-    //                   color: Colors.white,
-    //                 ),
-    //               ),
-    //               onTap: () {
-    //                 Navigator.of(context).pushNamed('/search-talkshow-screen');
-    //                 // final user = FirebaseAuth.instance.currentUser;
-    //                 // String tmpToken;
-    //                 // user.getIdTokenResult().then((value) {
-    //                 //   Future<void> getData() async {
-    //                 //     String url = 'http://20.89.111.129/api/Login';
-    //                 //     Uri uri = Uri.parse(url);
+    final _paddingOS = MediaQuery.of(context).padding;
+    final _sizeOS = MediaQuery.of(context).size;
+    final _sizeHeight = _sizeOS.height - _paddingOS.bottom - _paddingOS.top;
+    final _sizeWidth = _sizeOS.width - _paddingOS.left - _paddingOS.right;
 
-    //                 //     Map<String, String> headers = {
-    //                 //       'token': '${value.token}'
-    //                 //     };
-    //                 //     http.Response res =
-    //                 //         await http.get(uri, headers: headers);
-    //                 //     // log('TOKEN TRONG FUTURE NE: $tmpToken');
-    //                 //     // log('HEADER NE: ${headers.toString()}');
-    //                 //     log('response nè: ${res.body}');
-    //                 //     // log('STATUS CODE NEF: ${res.statusCode}');
-    //                 //     final tmp = jsonDecode(res.body);
-    //                 //     setState(() {
-    //                 //       tmp1 = tmp;
-    //                 //     });
-    //                 //     log('HIHIHIHIHIHI ${tmp['token']['result']}');
-    //                 //   }
+    return FutureBuilder(
+      future: myFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: CircularProgressIndicator(
+              color: Colors.black38,
+            ),
+          );
+        } else if (snapshot.hasData) {
+          log('snapshot has data'.toUpperCase());
 
-    //                 //   getData();
-
-    //                 //   log('ACCESS TOKEN NEF: $tmpToken');
-    //                 // });
-    //                 // log('TOKEN NGOAIF FUTURE: $tmpToken');
-    //                 // Authen().authen();
-    //               },
-    //             ),
-    //           ),
-    //           SizedBox(width: _sizeWidth * 1 / 40),
-    //           Expanded(
-    //             child: GestureDetector(
-    //               child: Container(
-    //                 child: Padding(
-    //                   padding: const EdgeInsets.only(
-    //                       left: 10, right: 10, top: 6, bottom: 6),
-    //                   child: Text(
-    //                     'Consultants',
-    //                     textAlign: TextAlign.center,
-    //                     style: AppStyle.typeSearch,
-    //                   ),
-    //                 ),
-    //                 decoration: BoxDecoration(
-    //                   borderRadius: BorderRadius.circular(5),
-    //                   boxShadow: [
-    //                     BoxShadow(
-    //                       // offset: Offset(1.0, 1.0),
-    //                       blurRadius: 8,
-    //                       color: Color(0xFF999999).withOpacity(0.5),
-    //                     )
-    //                   ],
-    //                   // color: Color(0xFF2DE2ED),
-    //                   color: Colors.white,
-    //                 ),
-    //               ),
-    //               onTap: () {
-    //                 Navigator.of(context)
-    //                     .pushNamed('/search-consultant-screen');
-    //                 // Future<void> getPost() async {
-    //                 //   String url = 'http://20.89.111.129/api/Login/Post';
-    //                 //   Uri uri = Uri.parse(url);
-    //                 //   log('BODY NE $tmp1');
-    //                 //   Map<String, String> headers = {
-    //                 //     'Authorization': 'Bearer ${tmp1['token']['result']}'
-    //                 //   };
-    //                 //   http.Response res =
-    //                 //       await http.post(uri, headers: headers);
-    //                 //   log('STATUS ${res.statusCode}');
-    //                 //   // log('TOKEN TRONG FUTURE NE: $tmpToken');
-    //                 //   // log('HEADER NE: ${headers.toString()}');
-    //                 //   log('response nè: ${res.body}');
-    //                 //   // log('STATUS CODE NEF: ${res.statusCode}');
-    //                 //   // final tmp = jsonDecode(res.body);
-    //                 //   // log('BODYYYYYYYYYYY $tmp');
-    //                 // }
-
-    //                 // getPost();
-    //               },
-    //             ),
-    //           ),
-    //           SizedBox(width: _sizeWidth * 1 / 40),
-    //           Expanded(
-    //             child: GestureDetector(
-    //               child: Container(
-    //                 child: Padding(
-    //                   padding: const EdgeInsets.only(
-    //                       left: 10, right: 10, top: 6, bottom: 6),
-    //                   child: Text(
-    //                     'Universities',
-    //                     textAlign: TextAlign.center,
-    //                     style: AppStyle.typeSearch,
-    //                   ),
-    //                 ),
-    //                 decoration: BoxDecoration(
-    //                   borderRadius: BorderRadius.circular(5),
-    //                   boxShadow: [
-    //                     BoxShadow(
-    //                       // offset: Offset(1.0, 1.0),
-    //                       blurRadius: 8,
-    //                       color: Color(0xFF999999).withOpacity(0.5),
-    //                     )
-    //                   ],
-    //                   // color: Color(0xFF14D5F6),
-    //                   color: Colors.white,
-    //                 ),
-    //               ),
-    //               onTap: () {
-    //                 Navigator.of(context)
-    //                     .pushNamed('/search-university-screen');
-    //               },
-    //             ),
-    //           ),
-    //         ],
-    //       ),
-    //     ),
-    //     SizedBox(
-    //       height: _sizeHeight * 0.02,
-    //     ),
-    //     // Padding(
-    //     //   padding: const EdgeInsets.symmetric(horizontal: 16),
-    //     //   child: Divider(
-    //     //     color: Colors.black38,
-    //     //     // height: 0.,
-    //     //   ),
-    //     // ),
-    //     // Padding(
-    //     //   padding: const EdgeInsets.symmetric(horizontal: 16),
-    //     //   child: Divider(
-    //     //     color: Colors.black38,
-    //     //     // height: 0.,
-    //     //   ),
-    //     // ),
-    //     Padding(
-    //       padding: const EdgeInsets.symmetric(horizontal: 170),
-    //       child: Divider(
-    //         color: Colors.black38,
-    //         // height: 0.,
-    //       ),
-    //     ),
-    //     SizedBox(
-    //       height: _sizeHeight * 0.017,
-    //     ),
-    //     Padding(
-    //       padding: const EdgeInsets.symmetric(horizontal: 15),
-    //       child: Container(
-    //         height: _sizeHeight * 0.5,
-    //         decoration: BoxDecoration(
-    //           borderRadius: BorderRadius.circular(5),
-    //           color: Colors.white,
-    //           boxShadow: [
-    //             BoxShadow(
-    //               blurRadius: 8,
-    //               color: Color(0xFF999999).withOpacity(0.4),
-    //             )
-    //           ],
-    //         ),
-    //         child: Column(
-    //           children: [
-    //             SizedBox(height: _sizeHeight * 0.024),
-    //             Padding(
-    //               padding: const EdgeInsets.symmetric(horizontal: 15),
-    //               child: Row(
-    //                 // mainAxisAlignment: MainAxisAlignment.center,
-    //                 children: [
-    //                   Icon(Icons.school_outlined),
-    //                   SizedBox(
-    //                     width: 10,
-    //                   ),
-    //                   Text(
-    //                     'Popular Talkshows',
-    //                     style: AppStyle.titleSearch,
-    //                   ),
-    //                 ],
-    //               ),
-    //             ),
-    //             SizedBox(height: _sizeHeight * 0.022),
-    //             Container(
-    //               height: _sizeHeight * 0.395,
-    //               child: PageView.builder(
-    //                 controller: _pageController,
-    //                 itemCount: 3,
-    //                 itemBuilder: (context, index) {
-    //                   return Padding(
-    //                     padding: const EdgeInsets.only(left: 5, right: 5),
-    //                     child: GestureDetector(
-    //                       child: Container(
-    //                         decoration: BoxDecoration(
-    //                           borderRadius: BorderRadius.circular(4),
-    //                           color: Color(0xFFDDDDDD),
-    //                           border: Border.all(
-    //                             color: Colors.black54,
-    //                             width: 0.07,
-    //                           ),
-    //                         ),
-    //                         // height: 100,
-    //                         child: Column(
-    //                           crossAxisAlignment: CrossAxisAlignment.start,
-    //                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //                           children: [
-    //                             Container(
-    //                               // height: 100,
-    //                               // width: 100,
-    //                               // child:
-    //                               //     Image.network(listTalkshow[index].image),
-    //                               child: ClipRRect(
-    //                                 // borderRadius: BorderRadius.circular(4.0),
-    //                                 borderRadius: BorderRadius.only(
-    //                                     topLeft: Radius.circular(4),
-    //                                     topRight: Radius.circular(4)),
-    //                                 child: Image.network(
-    //                                     listTalkshow[index].image),
-    //                               ),
-    //                             ),
-    //                             Row(
-    //                               children: [
-    //                                 SizedBox(
-    //                                   width: _sizeWidth * 0.02,
-    //                                 ),
-    //                                 Text(
-    //                                   'Speaker : ${listTalkshow[index].speaker.fullName}',
-    //                                   style: TextStyle(
-    //                                     fontFamily: AppFonts.poppins,
-    //                                     fontSize: 12,
-    //                                   ),
-    //                                 ),
-    //                               ],
-    //                             ),
-    //                             Row(
-    //                               children: [
-    //                                 SizedBox(
-    //                                   width: _sizeWidth * 0.02,
-    //                                 ),
-    //                                 Text(
-    //                                   'Time : ${listTalkshow[index].timeStart} - ${listTalkshow[index].timeFinish}',
-    //                                   style: TextStyle(
-    //                                     fontFamily: AppFonts.poppins,
-    //                                     fontSize: 12,
-    //                                   ),
-    //                                 ),
-    //                               ],
-    //                             ),
-    //                             Row(
-    //                               children: [
-    //                                 SizedBox(
-    //                                   width: _sizeWidth * 0.02,
-    //                                 ),
-    //                                 (index == 2)
-    //                                     ? Row(
-    //                                         // mainAxisAlignment:
-    //                                         //     MainAxisAlignment.spaceBetween,
-    //                                         // crossAxisAlignment:
-    //                                         //     CrossAxisAlignment.end,
-    //                                         children: [
-    //                                           Text(
-    //                                             'Price : ${listTalkshow[index].price}',
-    //                                             style: TextStyle(
-    //                                               fontFamily: AppFonts.poppins,
-    //                                               fontSize: 12,
-    //                                             ),
-    //                                           ),
-    //                                           SizedBox(
-    //                                             width: _sizeWidth * 0.53,
-    //                                           ),
-    //                                           Text(
-    //                                             'See more >>',
-    //                                             style: TextStyle(
-    //                                               fontFamily: AppFonts.poppins,
-    //                                               fontSize: 12,
-    //                                             ),
-    //                                           )
-    //                                         ],
-    //                                       )
-    //                                     : Text(
-    //                                         'Price : ${listTalkshow[index].price}',
-    //                                         style: TextStyle(
-    //                                           fontFamily: AppFonts.poppins,
-    //                                           fontSize: 12,
-    //                                         ),
-    //                                       ),
-    //                               ],
-    //                             ),
-    //                             // Padding(
-    //                             //   padding: const EdgeInsets.only(left: 6),
-    //                             //   child: Text(
-    //                             //     listTalkshow[index].id,
-    //                             //     style: AppStyle.logoChooseUniver,
-    //                             //   ),
-    //                             // ),
-    //                             // Padding(
-    //                             //   padding: const EdgeInsets.only(left: 6),
-    //                             //   child: Text(
-    //                             //     listTalkshow[index].name,
-    //                             //     style: AppStyle.logoChooseUniver,
-    //                             //   ),
-    //                             // ),
-    //                             // (index == 2)
-    //                             //     ? Padding(
-    //                             //         padding:
-    //                             //             const EdgeInsets.only(left: 250),
-    //                             //         child: GestureDetector(
-    //                             //           child: Text(
-    //                             //             'SEE MORE >>',
-    //                             //             style: AppStyle.link,
-    //                             //           ),
-    //                             //           onTap: () {
-    //                             //             print('ON TAP SEE MORE');
-    //                             //             Navigator.of(context).pushNamed(
-    //                             //                 '/search-talkshow-screen');
-    //                             //           },
-    //                             //         ),
-    //                             //       )
-    //                             //     : SizedBox(),
-    //                             // (index == 2)
-    //                             //     ? Row(
-    //                             //         children: [
-    //                             //           SizedBox(
-    //                             //             width: _sizeWidth * 0.02,
-    //                             //           ),
-    //                             //           Text(
-    //                             //             'Price : ${listTalkshow[index].price}',
-    //                             //             style: TextStyle(
-    //                             //               fontFamily: AppFonts.poppins,
-    //                             //               fontSize: 12,
-    //                             //             ),
-    //                             //           ),
-    //                             //           Expanded(child: SizedBox()),
-    //                             //           Text(
-    //                             //             'See more >>',
-    //                             //             style: TextStyle(
-    //                             //               fontFamily: AppFonts.poppins,
-    //                             //               fontSize: 12,
-    //                             //             ),
-    //                             //           ),
-    //                             //         ],
-    //                             //       )
-    //                             //     : SizedBox()
-    //                           ],
-    //                         ),
-    //                       ),
-    //                       onTap: () {
-    //                         Navigator.of(context).pushNamed(
-    //                             '/talkshow-detail-screen',
-    //                             arguments: listTalkshow[index]);
-    //                       },
-    //                     ),
-    //                   );
-    //                 },
-    //                 onPageChanged: (index) {
-    //                   setState(() {
-    //                     _currentIndex = index;
-    //                   });
-    //                 },
-    //               ),
-    //             ),
-    //             // SizedBox(height: _sizeHeight * 0.025),
-    //           ],
-    //         ),
-    //       ),
-    //     ),
-    //     SizedBox(height: _sizeHeight * 0.03),
-    //     Padding(
-    //       padding: const EdgeInsets.symmetric(horizontal: 15),
-    //       child: Container(
-    //         decoration: BoxDecoration(
-    //           borderRadius: BorderRadius.circular(5),
-    //           color: Colors.white,
-    //           boxShadow: [
-    //             BoxShadow(
-    //               blurRadius: 8,
-    //               color: Color(0xFF999999).withOpacity(0.4),
-    //             )
-    //           ],
-    //         ),
-    //         child: Column(
-    //           children: [
-    //             SizedBox(height: _sizeHeight * 0.024),
-    //             Padding(
-    //               padding: const EdgeInsets.symmetric(horizontal: 15),
-    //               child: Row(
-    //                 // mainAxisAlignment: MainAxisAlignment.center,
-    //                 children: [
-    //                   Icon(Icons.school_outlined),
-    //                   SizedBox(
-    //                     width: 10,
-    //                   ),
-    //                   Text(
-    //                     'Popular Consultants',
-    //                     style: AppStyle.titleSearch,
-    //                   ),
-    //                 ],
-    //               ),
-    //             ),
-    //             SizedBox(height: _sizeHeight * 0.022),
-    //             Container(
-    //               height: _sizeHeight * 0.32,
-    //               child: PageView.builder(
-    //                 controller: _pageController,
-    //                 itemCount: 3,
-    //                 itemBuilder: (context, index) {
-    //                   return Padding(
-    //                     padding: const EdgeInsets.only(left: 5, right: 5),
-    //                     child: GestureDetector(
-    //                       child: Container(
-    //                         decoration: BoxDecoration(
-    //                           borderRadius: BorderRadius.circular(4),
-    //                           color: Colors.grey,
-    //                         ),
-    //                         height: 100,
-    //                         child: Column(
-    //                           crossAxisAlignment: CrossAxisAlignment.start,
-    //                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //                           children: [
-    //                             Container(
-    //                               height: 100,
-    //                               width: 100,
-    //                               child: Image.network(
-    //                                   listConsultant[index].image),
-    //                             ),
-    //                             (index == 2)
-    //                                 ? Padding(
-    //                                     padding:
-    //                                         const EdgeInsets.only(left: 300),
-    //                                     child: GestureDetector(
-    //                                       child: Text(
-    //                                         'SEE MORE >>',
-    //                                         style: AppStyle.link,
-    //                                       ),
-    //                                       onTap: () {
-    //                                         print('ON TAP SEE MORE');
-    //                                         Navigator.of(context).pushNamed(
-    //                                             '/search-consultant-screen');
-    //                                       },
-    //                                     ),
-    //                                   )
-    //                                 : SizedBox()
-    //                           ],
-    //                         ),
-    //                       ),
-    //                       onTap: () {
-    //                         Navigator.of(context).pushNamed(
-    //                             '/consultant-detail-screen',
-    //                             arguments: listConsultant[index]);
-    //                       },
-    //                     ),
-    //                   );
-    //                 },
-    //                 onPageChanged: (index) {
-    //                   setState(() {
-    //                     _currentIndex = index;
-    //                   });
-    //                 },
-    //               ),
-    //             ),
-    //             SizedBox(height: _sizeHeight * 0.025),
-    //           ],
-    //         ),
-    //       ),
-    //     ),
-    //     SizedBox(height: _sizeHeight * 0.03),
-
-    //     Padding(
-    //       padding: const EdgeInsets.symmetric(horizontal: 15),
-    //       child: Container(
-    //         decoration: BoxDecoration(
-    //           borderRadius: BorderRadius.circular(5),
-    //           color: Colors.white,
-    //           boxShadow: [
-    //             BoxShadow(
-    //               blurRadius: 8,
-    //               color: Color(0xFF999999).withOpacity(0.4),
-    //             )
-    //           ],
-    //         ),
-    //         child: Column(
-    //           children: [
-    //             SizedBox(height: _sizeHeight * 0.024),
-    //             Padding(
-    //               padding: const EdgeInsets.symmetric(horizontal: 15),
-    //               child: Row(
-    //                 // mainAxisAlignment: MainAxisAlignment.center,
-    //                 children: [
-    //                   Icon(Icons.school_outlined),
-    //                   SizedBox(
-    //                     width: 10,
-    //                   ),
-    //                   Text(
-    //                     'Popular Universities',
-    //                     style: AppStyle.titleSearch,
-    //                   ),
-    //                 ],
-    //               ),
-    //             ),
-    //             SizedBox(height: _sizeHeight * 0.022),
-    //             Container(
-    //               height: _sizeHeight * 0.32,
-    //               child: PageView.builder(
-    //                 controller: _pageController,
-    //                 itemCount: 3,
-    //                 itemBuilder: (context, index) {
-    //                   return Padding(
-    //                     padding: const EdgeInsets.only(left: 5, right: 5),
-    //                     child: GestureDetector(
-    //                       child: Container(
-    //                         decoration: BoxDecoration(
-    //                           borderRadius: BorderRadius.circular(4),
-    //                           color: Colors.grey,
-    //                         ),
-    //                         height: 100,
-    //                         child: Column(
-    //                           crossAxisAlignment: CrossAxisAlignment.start,
-    //                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //                           children: [
-    //                             Padding(
-    //                               padding: const EdgeInsets.only(left: 6),
-    //                               child: Text(
-    //                                 listUniversity[index].name,
-    //                                 style: AppStyle.logoChooseUniver,
-    //                               ),
-    //                             ),
-    //                             (index == 2)
-    //                                 ? Padding(
-    //                                     padding:
-    //                                         const EdgeInsets.only(left: 300),
-    //                                     child: GestureDetector(
-    //                                       child: Text(
-    //                                         'SEE MORE >>',
-    //                                         style: AppStyle.link,
-    //                                       ),
-    //                                       onTap: () {
-    //                                         print('ON TAP SEE MORE');
-    //                                         Navigator.of(context).pushNamed(
-    //                                             '/search-university-screen');
-    //                                       },
-    //                                     ),
-    //                                   )
-    //                                 : SizedBox()
-    //                           ],
-    //                         ),
-    //                       ),
-    //                       onTap: () {
-    //                         Navigator.of(context).pushNamed(
-    //                             '/university-detail-screen',
-    //                             arguments: listUniversity[index]);
-    //                       },
-    //                     ),
-    //                   );
-    //                 },
-    //                 onPageChanged: (index) {
-    //                   setState(() {
-    //                     _currentIndex = index;
-    //                   });
-    //                 },
-    //               ),
-    //             ),
-    //             SizedBox(height: _sizeHeight * 0.025),
-    //           ],
-    //         ),
-    //       ),
-    //     ),
-    //     SizedBox(height: 20),
-    //   ],
-    // );
-    // ================================================
-// ListView.builder(
-//             itemCount: listTalkshow.length,
-//             itemBuilder: (context, index) {
-//               return TalkshowDetailItem(listTalkshow[index]);
-//             },
-//           ),
-    return ListView(
-      children: [
-        CarouselWidget(),
-        SizedBox(
-          height: _sizeHeight * 0.028,
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: GestureDetector(
-                  child: Container(
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          left: 10, right: 10, top: 6, bottom: 6),
-                      child: Text(
-                        'Talkshows',
-                        textAlign: TextAlign.center,
-                        style: AppStyle.typeSearch,
-                      ),
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      boxShadow: [
-                        isTalkshow
-                            ? BoxShadow(
-                                // offset: Offset(1.0, 1.0),
-                                blurRadius: 8,
-                                color: Colors.black26,
-                              )
-                            : BoxShadow(
-                                color: Color(0xFFEEEEEE),
-                              )
+          if (isCounselor) {
+            Map<String, List<Counselor>> mapCounselor = snapshot.data;
+            String numberOfPage = mapCounselor.keys.elementAt(0);
+            List<Counselor> list = mapCounselor.entries.first.value;
+            if (numberOfPage == 'Not found any counselor') {
+              return ListView(
+                children: [
+                  CarouselWidget(),
+                  SizedBox(
+                    height: _sizeHeight * 0.028,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: GestureDetector(
+                            child: Container(
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 10, right: 10, top: 6, bottom: 6),
+                                child: Text(
+                                  'Tư vấn',
+                                  textAlign: TextAlign.center,
+                                  style: AppStyle.typeSearch,
+                                ),
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                boxShadow: [
+                                  isTalkshow
+                                      ? BoxShadow(
+                                          blurRadius: 8,
+                                          color: Colors.black26,
+                                        )
+                                      : BoxShadow(
+                                          color: Color(0xFFEEEEEE),
+                                        )
+                                ],
+                                border: Border.all(
+                                    width: 0.15, color: Color(0xFFBBBBBB)),
+                                color: isTalkshow
+                                    ? Colors.white
+                                    : Color(0xFFDDDDDD),
+                              ),
+                            ),
+                            onTap: () {
+                              log('TAP is talkshow');
+                              log('university: $isTalkshow');
+                              if (!isTalkshow) {
+                                setState(() {
+                                  isTalkshow = true;
+                                  isCounselor = false;
+                                  isUniversity = false;
+                                  _currentPage = 1;
+                                  myFuture = _getList('');
+                                });
+                              }
+                            },
+                          ),
+                        ),
+                        SizedBox(width: _sizeWidth * 1 / 40),
+                        Expanded(
+                          child: GestureDetector(
+                            child: Container(
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 10, right: 10, top: 6, bottom: 6),
+                                child: Text(
+                                  'Diễn giả',
+                                  textAlign: TextAlign.center,
+                                  style: AppStyle.typeSearch,
+                                ),
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                boxShadow: [
+                                  isCounselor
+                                      ? BoxShadow(
+                                          blurRadius: 8,
+                                          color: Color(0xFF999999)
+                                              .withOpacity(0.6),
+                                        )
+                                      : BoxShadow(
+                                          color: Color(0xFFEEEEEE),
+                                        )
+                                ],
+                                border: Border.all(
+                                    width: 0.15, color: Color(0xFFBBBBBB)),
+                                color: isCounselor
+                                    ? Colors.white
+                                    : Color(0xFFDDDDDD),
+                              ),
+                            ),
+                            onTap: () {
+                              log('TAP is consultant');
+                              log('university: $isCounselor');
+                              if (!isCounselor) {
+                                setState(() {
+                                  isCounselor = true;
+                                  isTalkshow = false;
+                                  isUniversity = false;
+                                });
+                              }
+                            },
+                          ),
+                        ),
+                        SizedBox(width: _sizeWidth * 1 / 40),
+                        Expanded(
+                          child: GestureDetector(
+                            child: Container(
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 10, right: 10, top: 6, bottom: 6),
+                                child: Text(
+                                  'Đại học',
+                                  textAlign: TextAlign.center,
+                                  style: AppStyle.typeSearch,
+                                ),
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                boxShadow: [
+                                  isUniversity
+                                      ? BoxShadow(
+                                          blurRadius: 8,
+                                          color: Color(0xFF999999)
+                                              .withOpacity(0.6),
+                                        )
+                                      : BoxShadow(
+                                          color: Color(0xFFEEEEEE),
+                                        )
+                                ],
+                                border: Border.all(
+                                    width: 0.15, color: Color(0xFFBBBBBB)),
+                                color: isUniversity
+                                    ? Colors.white
+                                    : Color(0xFFDDDDDD),
+                              ),
+                            ),
+                            onTap: () {
+                              log('TAP is university');
+                              log('university: $isUniversity');
+                              if (!isUniversity) {
+                                setState(() {
+                                  isUniversity = true;
+                                  isTalkshow = false;
+                                  isCounselor = false;
+                                  _currentPage = 1;
+                                  myFuture = _getList('');
+                                });
+                              }
+                            },
+                          ),
+                        ),
                       ],
-                      border: Border.all(width: 0.15, color: Color(0xFFBBBBBB)),
-                      // color: Color(0xFF14D5F6),
-                      // color: Colors.white,
-                      color: isTalkshow ? Colors.white : Color(0xFFDDDDDD),
                     ),
                   ),
-                  onTap: () {
-                    log('TAP is talkshow');
-                    log('university: $isTalkshow');
-                    if (!isTalkshow) {
-                      setState(() {
-                        isTalkshow = true;
-                        isConsultant = false;
-                        isUniversity = false;
-                        listUniversity = [];
-                        listConsultant = [];
-                        listTalkshow = Talkshow.createListTalkshow();
-                      });
-                    }
-                  },
-                ),
-              ),
-              SizedBox(width: _sizeWidth * 1 / 40),
-              Expanded(
-                child: GestureDetector(
-                  child: Container(
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          left: 10, right: 10, top: 6, bottom: 6),
-                      child: Text(
-                        'Counselor',
-                        textAlign: TextAlign.center,
-                        style: AppStyle.typeSearch,
-                      ),
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      boxShadow: [
-                        isConsultant
-                            ? BoxShadow(
-                                // offset: Offset(1.0, 1.0),
-                                blurRadius: 8,
-                                color: Color(0xFF999999).withOpacity(0.6),
-                              )
-                            : BoxShadow(
-                                color: Color(0xFFEEEEEE),
-                              )
-                      ],
-                      border: Border.all(width: 0.15, color: Color(0xFFBBBBBB)),
-                      // color: Color(0xFF14D5F6),
-                      // color: Colors.white,
-                      color: isConsultant ? Colors.white : Color(0xFFDDDDDD),
+                  SizedBox(height: _sizeHeight * 0.03),
+                  _searchWidget(_sizeHeight, _sizeWidth),
+                  SizedBox(height: _sizeHeight * 0.022),
+                  Center(
+                    child: Text(
+                      'Not found any Counselor !',
+                      style: AppStyle.titleSearch,
                     ),
                   ),
-                  onTap: () {
-                    log('TAP is consultant');
-                    log('university: $isConsultant');
-                    if (!isConsultant) {
-                      setState(() {
-                        isConsultant = true;
-                        isTalkshow = false;
-                        isUniversity = false;
-                        listUniversity = [];
-                        listTalkshow = [];
-                        listConsultant = User.createListConsulant();
-                      });
-                    }
-                  },
-                ),
-              ),
-              SizedBox(width: _sizeWidth * 1 / 40),
-              Expanded(
-                child: GestureDetector(
-                  child: Container(
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          left: 10, right: 10, top: 6, bottom: 6),
-                      child: Text(
-                        'Universities',
-                        textAlign: TextAlign.center,
-                        style: AppStyle.typeSearch,
-                      ),
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      boxShadow: [
-                        isUniversity
-                            ? BoxShadow(
-                                // offset: Offset(1.0, 1.0),
-                                blurRadius: 8,
-                                color: Color(0xFF999999).withOpacity(0.6),
-                              )
-                            : BoxShadow(
-                                color: Color(0xFFEEEEEE),
-                              )
+                  // Column(
+                  //   children: [
+                  //     _searchWidget(_sizeHeight, _sizeWidth),
+                  //     ...GetListCounselor()
+                  //         .getListCounselor(list, _sizeHeight, context),
+                  //   ],
+                  // ),
+                  // Center(
+                  //   child: Row(
+                  //     mainAxisAlignment: MainAxisAlignment.center,
+                  //     children: [
+                  //       ..._paging(numberOfPage),
+                  //     ],
+                  //   ),
+                  // ),
+                  // SizedBox(
+                  //   height: _sizeHeight * 0.022,
+                  // ),
+                ],
+              );
+            } else {
+              return ListView(
+                children: [
+                  CarouselWidget(),
+                  SizedBox(
+                    height: _sizeHeight * 0.028,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: GestureDetector(
+                            child: Container(
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 10, right: 10, top: 6, bottom: 6),
+                                child: Text(
+                                  'Tư vấn',
+                                  textAlign: TextAlign.center,
+                                  style: AppStyle.typeSearch,
+                                ),
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                boxShadow: [
+                                  isTalkshow
+                                      ? BoxShadow(
+                                          blurRadius: 8,
+                                          color: Colors.black26,
+                                        )
+                                      : BoxShadow(
+                                          color: Color(0xFFEEEEEE),
+                                        )
+                                ],
+                                border: Border.all(
+                                    width: 0.15, color: Color(0xFFBBBBBB)),
+                                color: isTalkshow
+                                    ? Colors.white
+                                    : Color(0xFFDDDDDD),
+                              ),
+                            ),
+                            onTap: () {
+                              log('TAP is talkshow');
+                              log('university: $isTalkshow');
+                              if (!isTalkshow) {
+                                setState(() {
+                                  isTalkshow = true;
+                                  isCounselor = false;
+                                  isUniversity = false;
+                                  _currentPage = 1;
+                                  myFuture = _getList('');
+                                });
+                              }
+                            },
+                          ),
+                        ),
+                        SizedBox(width: _sizeWidth * 1 / 40),
+                        Expanded(
+                          child: GestureDetector(
+                            child: Container(
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 10, right: 10, top: 6, bottom: 6),
+                                child: Text(
+                                  'Diễn giả',
+                                  textAlign: TextAlign.center,
+                                  style: AppStyle.typeSearch,
+                                ),
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                boxShadow: [
+                                  isCounselor
+                                      ? BoxShadow(
+                                          blurRadius: 8,
+                                          color: Color(0xFF999999)
+                                              .withOpacity(0.6),
+                                        )
+                                      : BoxShadow(
+                                          color: Color(0xFFEEEEEE),
+                                        )
+                                ],
+                                border: Border.all(
+                                    width: 0.15, color: Color(0xFFBBBBBB)),
+                                color: isCounselor
+                                    ? Colors.white
+                                    : Color(0xFFDDDDDD),
+                              ),
+                            ),
+                            onTap: () {
+                              log('TAP is consultant');
+                              log('university: $isCounselor');
+                              if (!isCounselor) {
+                                setState(() {
+                                  isCounselor = true;
+                                  isTalkshow = false;
+                                  isUniversity = false;
+                                });
+                              }
+                            },
+                          ),
+                        ),
+                        SizedBox(width: _sizeWidth * 1 / 40),
+                        Expanded(
+                          child: GestureDetector(
+                            child: Container(
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 10, right: 10, top: 6, bottom: 6),
+                                child: Text(
+                                  'Đại học',
+                                  textAlign: TextAlign.center,
+                                  style: AppStyle.typeSearch,
+                                ),
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                boxShadow: [
+                                  isUniversity
+                                      ? BoxShadow(
+                                          blurRadius: 8,
+                                          color: Color(0xFF999999)
+                                              .withOpacity(0.6),
+                                        )
+                                      : BoxShadow(
+                                          color: Color(0xFFEEEEEE),
+                                        )
+                                ],
+                                border: Border.all(
+                                    width: 0.15, color: Color(0xFFBBBBBB)),
+                                color: isUniversity
+                                    ? Colors.white
+                                    : Color(0xFFDDDDDD),
+                              ),
+                            ),
+                            onTap: () {
+                              log('TAP is university');
+                              log('university: $isUniversity');
+                              if (!isUniversity) {
+                                setState(() {
+                                  isUniversity = true;
+                                  isTalkshow = false;
+                                  isCounselor = false;
+                                  _currentPage = 1;
+                                  myFuture = _getList('');
+                                });
+                              }
+                              log('university: $isUniversity');
+                              log('counselor: $isCounselor');
+                              log('talkshow: $isTalkshow');
+                            },
+                          ),
+                        ),
                       ],
-                      border: Border.all(width: 0.15, color: Color(0xFFBBBBBB)),
-                      // color: Color(0xFF14D5F6),
-                      // color: Colors.white,
-                      color: isUniversity ? Colors.white : Color(0xFFDDDDDD),
                     ),
                   ),
-                  onTap: () {
-                    log('TAP is university');
-                    log('university: $isUniversity');
-                    if (!isUniversity) {
-                      setState(() {
-                        isUniversity = true;
-                        isTalkshow = false;
-                        isConsultant = false;
-                        listTalkshow = [];
-                        listConsultant = [];
-                        listUniversity = University.createListUniversity();
-                      });
-                    }
-                  },
+                  SizedBox(height: _sizeHeight * 0.03),
+                  Column(
+                    children: [
+                      _searchWidget(_sizeHeight, _sizeWidth),
+                      ...GetListCounselor()
+                          .getListCounselor(list, _sizeHeight, context),
+                    ],
+                  ),
+                  Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ..._paging(numberOfPage),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: _sizeHeight * 0.022,
+                  ),
+                ],
+              );
+            }
+          } else if (isTalkshow) {
+            Map<String, List<Talkshow>> mapTalkshow = snapshot.data;
+            String numberOfPage = mapTalkshow.keys.elementAt(0);
+            List<Talkshow> list = mapTalkshow.entries.first.value;
+            return ListView(
+              children: [
+                CarouselWidget(),
+                SizedBox(
+                  height: _sizeHeight * 0.028,
                 ),
-              ),
-            ],
-          ),
-        ),
-        SizedBox(height: _sizeHeight * 0.03),
-        // Padding(
-        //   padding: const EdgeInsets.symmetric(horizontal: 170),
-        //   child: Divider(
-        //     color: Colors.black38,
-        //   ),
-        // ),
-        // SizedBox(height: _sizeHeight * 0.02),
-        (isTalkshow)
-            ? Column(
-                children: [...getListTalkshow(listTalkshow, _sizeHeight)],
-              )
-            : SizedBox(),
-        (isConsultant)
-            ? Column(
-                children: [...getListCounselor(listCounselor, _sizeHeight)],
-              )
-            : SizedBox(),
-        (isUniversity)
-            ? Column(
-                children: [...getListUniversity(listUniversity, _sizeHeight)],
-              )
-            : SizedBox(),
-      ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: GestureDetector(
+                          child: Container(
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 10, right: 10, top: 6, bottom: 6),
+                              child: Text(
+                                'Tư vấn',
+                                textAlign: TextAlign.center,
+                                style: AppStyle.typeSearch,
+                              ),
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              boxShadow: [
+                                isTalkshow
+                                    ? BoxShadow(
+                                        // offset: Offset(1.0, 1.0),
+                                        blurRadius: 8,
+                                        color: Colors.black26,
+                                      )
+                                    : BoxShadow(
+                                        color: Color(0xFFEEEEEE),
+                                      )
+                              ],
+                              border: Border.all(
+                                  width: 0.15, color: Color(0xFFBBBBBB)),
+                              color:
+                                  isTalkshow ? Colors.white : Color(0xFFDDDDDD),
+                            ),
+                          ),
+                          onTap: () {
+                            log('TAP is talkshow');
+                            log('university: $isTalkshow');
+                            if (!isTalkshow) {
+                              setState(() {
+                                isTalkshow = true;
+                                isCounselor = false;
+                                isUniversity = false;
+                              });
+                            }
+                          },
+                        ),
+                      ),
+                      SizedBox(width: _sizeWidth * 1 / 40),
+                      Expanded(
+                        child: GestureDetector(
+                          child: Container(
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 10, right: 10, top: 6, bottom: 6),
+                              child: Text(
+                                'Diễn giả',
+                                textAlign: TextAlign.center,
+                                style: AppStyle.typeSearch,
+                              ),
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              boxShadow: [
+                                isCounselor
+                                    ? BoxShadow(
+                                        blurRadius: 8,
+                                        color:
+                                            Color(0xFF999999).withOpacity(0.6),
+                                      )
+                                    : BoxShadow(
+                                        color: Color(0xFFEEEEEE),
+                                      )
+                              ],
+                              border: Border.all(
+                                  width: 0.15, color: Color(0xFFBBBBBB)),
+                              color: isCounselor
+                                  ? Colors.white
+                                  : Color(0xFFDDDDDD),
+                            ),
+                          ),
+                          onTap: () {
+                            log('TAP is consultant');
+                            log('university: $isCounselor');
+                            if (!isCounselor) {
+                              setState(() {
+                                isCounselor = true;
+                                isTalkshow = false;
+                                isUniversity = false;
+                                _currentPage = 1;
+                                myFuture = _getList('');
+                              });
+                            }
+                          },
+                        ),
+                      ),
+                      SizedBox(width: _sizeWidth * 1 / 40),
+                      Expanded(
+                        child: GestureDetector(
+                          child: Container(
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 10, right: 10, top: 6, bottom: 6),
+                              child: Text(
+                                'Đại học',
+                                textAlign: TextAlign.center,
+                                style: AppStyle.typeSearch,
+                              ),
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              boxShadow: [
+                                isUniversity
+                                    ? BoxShadow(
+                                        blurRadius: 8,
+                                        color:
+                                            Color(0xFF999999).withOpacity(0.6),
+                                      )
+                                    : BoxShadow(
+                                        color: Color(0xFFEEEEEE),
+                                      )
+                              ],
+                              border: Border.all(
+                                  width: 0.15, color: Color(0xFFBBBBBB)),
+                              color: isUniversity
+                                  ? Colors.white
+                                  : Color(0xFFDDDDDD),
+                            ),
+                          ),
+                          onTap: () {
+                            log('TAP is university');
+                            log('university: $isUniversity');
+                            if (!isUniversity) {
+                              setState(() {
+                                isUniversity = true;
+                                isTalkshow = false;
+                                isCounselor = false;
+                                _currentPage = 1;
+                                myFuture = _getList('');
+                              });
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: _sizeHeight * 0.03),
+                Column(
+                  children: [
+                    _searchWidget(_sizeHeight, _sizeWidth),
+                    ...GetListTalkshow()
+                        .getListTalkshow(list, _sizeHeight, context)
+                  ],
+                ),
+                Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ..._paging(numberOfPage),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: _sizeHeight * 0.022,
+                ),
+              ],
+            );
+          } else {
+            log('VO IS UNIVERSITY');
+            Map<String, List<University>> mapUniversity = snapshot.data;
+            String numberOfPage = mapUniversity.keys.elementAt(0);
+            List<University> list = mapUniversity.entries.first.value;
+            return ListView(
+              children: [
+                CarouselWidget(),
+                SizedBox(
+                  height: _sizeHeight * 0.028,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: GestureDetector(
+                          child: Container(
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 10, right: 10, top: 6, bottom: 6),
+                              child: Text(
+                                'Tư vấn',
+                                textAlign: TextAlign.center,
+                                style: AppStyle.typeSearch,
+                              ),
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              boxShadow: [
+                                isTalkshow
+                                    ? BoxShadow(
+                                        blurRadius: 8,
+                                        color: Colors.black26,
+                                      )
+                                    : BoxShadow(
+                                        color: Color(0xFFEEEEEE),
+                                      )
+                              ],
+                              border: Border.all(
+                                  width: 0.15, color: Color(0xFFBBBBBB)),
+                              color:
+                                  isTalkshow ? Colors.white : Color(0xFFDDDDDD),
+                            ),
+                          ),
+                          onTap: () {
+                            log('TAP is talkshow');
+                            log('university: $isTalkshow');
+                            if (!isTalkshow) {
+                              setState(() {
+                                isTalkshow = true;
+                                isCounselor = false;
+                                isUniversity = false;
+                                _currentPage = 1;
+                                myFuture = _getList('');
+                              });
+                            }
+                          },
+                        ),
+                      ),
+                      SizedBox(width: _sizeWidth * 1 / 40),
+                      Expanded(
+                        child: GestureDetector(
+                          child: Container(
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 10, right: 10, top: 6, bottom: 6),
+                              child: Text(
+                                'Diễn giả',
+                                textAlign: TextAlign.center,
+                                style: AppStyle.typeSearch,
+                              ),
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              boxShadow: [
+                                isCounselor
+                                    ? BoxShadow(
+                                        blurRadius: 8,
+                                        color:
+                                            Color(0xFF999999).withOpacity(0.6),
+                                      )
+                                    : BoxShadow(
+                                        color: Color(0xFFEEEEEE),
+                                      )
+                              ],
+                              border: Border.all(
+                                  width: 0.15, color: Color(0xFFBBBBBB)),
+                              color: isCounselor
+                                  ? Colors.white
+                                  : Color(0xFFDDDDDD),
+                            ),
+                          ),
+                          onTap: () {
+                            log('TAP is consultant');
+                            log('university: $isCounselor');
+                            if (!isCounselor) {
+                              setState(() {
+                                isCounselor = true;
+                                isTalkshow = false;
+                                isUniversity = false;
+                                _currentPage = 1;
+                                myFuture = _getList('');
+                              });
+                            }
+                          },
+                        ),
+                      ),
+                      SizedBox(width: _sizeWidth * 1 / 40),
+                      Expanded(
+                        child: GestureDetector(
+                          child: Container(
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 10, right: 10, top: 6, bottom: 6),
+                              child: Text(
+                                'Đại học',
+                                textAlign: TextAlign.center,
+                                style: AppStyle.typeSearch,
+                              ),
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              boxShadow: [
+                                isUniversity
+                                    ? BoxShadow(
+                                        blurRadius: 8,
+                                        color:
+                                            Color(0xFF999999).withOpacity(0.6),
+                                      )
+                                    : BoxShadow(
+                                        color: Color(0xFFEEEEEE),
+                                      )
+                              ],
+                              border: Border.all(
+                                  width: 0.15, color: Color(0xFFBBBBBB)),
+                              color: isUniversity
+                                  ? Colors.white
+                                  : Color(0xFFDDDDDD),
+                            ),
+                          ),
+                          onTap: () {
+                            log('TAP is university');
+                            log('university: $isUniversity');
+                            if (!isUniversity) {
+                              setState(() {
+                                isUniversity = true;
+                                isTalkshow = false;
+                                isCounselor = false;
+                              });
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: _sizeHeight * 0.03),
+                Column(
+                  children: [
+                    _searchWidget(_sizeHeight, _sizeWidth),
+                    ...GetListUniversity()
+                        .getListUniversity(list, _sizeHeight, context),
+                  ],
+                ),
+                Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ..._paging(numberOfPage),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: _sizeHeight * 0.022,
+                ),
+              ],
+            );
+          }
+        } else if (snapshot.hasError) {
+          log(snapshot.error.toString());
+          return Center(
+            child: Text('Snapshot has error !'),
+          );
+        } else {
+          log('SAI ${snapshot.error.toString()}');
+          return Center(
+            child: Text('Có gì đó sai nè !'),
+          );
+        }
+      },
     );
   }
 }
