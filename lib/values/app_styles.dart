@@ -213,12 +213,37 @@ class AppStyle {
   );
 
   static const barStyle = TextStyle(
-    fontFamily: AppFonts.poppins,
+    fontFamily: AppFonts.montserrat,
     fontSize: 16,
     shadows: [
       Shadow(
         blurRadius: 8,
         color: Colors.black12,
+      ),
+    ],
+  );
+
+  static const barStyleMontserrat = TextStyle(
+    fontFamily: AppFonts.montserrat,
+    fontSize: 16,
+    shadows: [
+      Shadow(
+        offset: Offset(1.0, 1.0),
+        blurRadius: 8,
+        color: Color(0xFF999999),
+      ),
+    ],
+  );
+
+  static const counselorDetail = TextStyle(
+    fontFamily: AppFonts.montserrat,
+    fontSize: 12,
+    color: Colors.black,
+    shadows: [
+      Shadow(
+        // offset: Offset(1.0, 1.0),
+        blurRadius: 8,
+        color: Color(0xFF999999),
       ),
     ],
   );

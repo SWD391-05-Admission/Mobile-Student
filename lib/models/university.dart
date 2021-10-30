@@ -1,6 +1,7 @@
 import 'package:mobile_customer/models/address.dart';
 
 class University {
+  int ID;
   String code;
   String name;
   String email;
@@ -14,6 +15,7 @@ class University {
   String image;
 
   University({
+    this.ID,
     this.code,
     this.name,
     this.email,

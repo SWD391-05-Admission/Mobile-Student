@@ -20,14 +20,15 @@ class _SearchWidgetState extends State<SearchWidget> {
   String typeDropdown;
   String degreeDropdown;
   String industryDropdown;
+  bool _findByNameCounselor = false;
+  bool _findByPhoneCounselor = false;
+  bool _findByEmailCounselor = false;
   @override
   Widget build(BuildContext context) {
-    final double _sizeHeight = MediaQuery.of(context).size.height -
-        MediaQuery.of(context).padding.top -
-        MediaQuery.of(context).padding.bottom;
-    final double _sizeWidth = MediaQuery.of(context).size.width -
-        MediaQuery.of(context).padding.left -
-        MediaQuery.of(context).padding.right;
+    final _paddingOS = MediaQuery.of(context).padding;
+    final _sizeOS = MediaQuery.of(context).size;
+    final _sizeHeight = _sizeOS.height - _paddingOS.bottom - _paddingOS.top;
+    final _sizeWidth = _sizeOS.width - _paddingOS.left - _paddingOS.right;
     return Padding(
       padding: const EdgeInsets.only(left: 15, right: 15),
       child: Container(
@@ -83,7 +84,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                   setState(() {
                     // value = searchController.text;
                     log('CONTROLLER: ${searchController.text}');
-                    log('VALUE: $value');
+                    log('VALUE SEARCH:  $value');
                   });
                 },
                 onSubmitted: (value) {
@@ -262,15 +263,108 @@ class _SearchWidgetState extends State<SearchWidget> {
                                 return SimpleDialog(
                                   // key: _formKey,
                                   children: <Widget>[
+                                    SizedBox(
+                                      height: _sizeHeight * 0.01,
+                                    ),
                                     Padding(
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 20),
                                       child: Text(
-                                        'Search Filters',
-                                        style: TextStyle(
-                                          fontFamily: AppFonts.poppins,
-                                          fontSize: 18,
+                                        'Bộ lọc tìm kiếm',
+                                        style: AppStyle.titleSearch.copyWith(
+                                          fontSize: 20,
                                         ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                    SizedBox(height: _sizeHeight * 0.015),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 20, right: 8),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            'Tìm bằng họ tên',
+                                            overflow: TextOverflow.ellipsis,
+                                            style: AppStyle.bookDetail.copyWith(
+                                              fontSize: 13,
+                                            ),
+                                          ),
+                                          Expanded(child: SizedBox()),
+                                          Checkbox(
+                                            value: _findByNameCounselor,
+                                            onChanged: (newValue) {
+                                              log(newValue.toString());
+                                              setState(() {
+                                                _findByNameCounselor = newValue;
+                                              });
+                                            },
+                                            checkColor: Colors.white,
+                                            activeColor: Colors.green,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 20, right: 8),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            'Tìm bằng địa chỉ email',
+                                            overflow: TextOverflow.ellipsis,
+                                            style: AppStyle.bookDetail.copyWith(
+                                              fontSize: 13,
+                                            ),
+                                          ),
+                                          Expanded(child: SizedBox()),
+                                          Checkbox(
+                                            value: _findByEmailCounselor,
+                                            onChanged: (newValue) {
+                                              log(newValue.toString());
+                                              setState(() {
+                                                _findByEmailCounselor =
+                                                    newValue;
+                                              });
+                                            },
+                                            checkColor: Colors.white,
+                                            activeColor: Colors.green,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 20, right: 8),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            'Tìm bằng số điện thoại',
+                                            overflow: TextOverflow.ellipsis,
+                                            style: AppStyle.bookDetail.copyWith(
+                                              fontSize: 13,
+                                            ),
+                                          ),
+                                          Expanded(child: SizedBox()),
+                                          Checkbox(
+                                            value: _findByPhoneCounselor,
+                                            onChanged: (newValue) {
+                                              log(newValue.toString());
+                                              setState(() {
+                                                _findByPhoneCounselor =
+                                                    newValue;
+                                              });
+                                            },
+                                            checkColor: Colors.white,
+                                            activeColor: Colors.green,
+                                          ),
+                                        ],
                                       ),
                                     ),
                                     SizedBox(height: _sizeHeight * 0.01),
@@ -279,74 +373,23 @@ class _SearchWidgetState extends State<SearchWidget> {
                                           horizontal: 20),
                                       child: Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            'Gender',
-                                            overflow: TextOverflow.ellipsis,
-                                            style: AppStyle.dropdownStyle,
-                                          ),
-                                          Expanded(child: SizedBox()),
-                                          DropdownButtonHideUnderline(
-                                            child: DropdownButton<String>(
-                                              // style: TextSty,
-
-                                              value: areaDropdow,
-                                              items: <String>[
-                                                ...AppValue.listKhuVuc
-                                              ].map((String value) {
-                                                return DropdownMenuItem<String>(
-                                                  value: value,
-                                                  child: Row(
-                                                    children: [
-                                                      SizedBox(
-                                                        width: 140,
-                                                        child: Text(
-                                                          value,
-                                                          textAlign:
-                                                              TextAlign.right,
-                                                          style: AppStyle
-                                                              .dropdownStyle,
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        width: 3,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                );
-                                              }).toList(),
-                                              onChanged: (newValue) {
-                                                setState(() {
-                                                  areaDropdow = newValue;
-                                                });
-                                              },
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(height: _sizeHeight * 0.03),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 20),
-                                      child: Row(
-                                        mainAxisAlignment:
                                             MainAxisAlignment.end,
                                         children: [
                                           ElevatedButton(
-                                            child: Text('Cancle'),
+                                            child: Text(
+                                              'Hủy bỏ',
+                                              style: TextStyle(
+                                                fontFamily: AppFonts.montserrat,
+                                              ),
+                                            ),
                                             onPressed: () {
-                                              print('TAP HUY BO');
-                                              areaDropdow = null;
-                                              typeDropdown = null;
-                                              degreeDropdown = null;
-                                              industryDropdown = null;
+                                              _findByEmailCounselor = false;
+                                              _findByNameCounselor = false;
+                                              _findByPhoneCounselor = false;
                                               Navigator.of(context).pop();
                                             },
                                             style: ElevatedButton.styleFrom(
                                               primary: Color(0xFFEEEEEEE),
-                                              // elevation: 1,
                                             ),
                                           ),
                                           SizedBox(
@@ -354,9 +397,16 @@ class _SearchWidgetState extends State<SearchWidget> {
                                             // height: 1,
                                           ),
                                           ElevatedButton(
-                                            child: Text('Apply'),
+                                            child: Text(
+                                              'Áp dụng',
+                                              style: TextStyle(
+                                                fontFamily: AppFonts.montserrat,
+                                              ),
+                                            ),
                                             onPressed: () {
-                                              log('TAP AP DUNG');
+                                              log('TAP AP DUNG email : $_findByEmailCounselor');
+                                              log('TAP AP DUNG phone : $_findByPhoneCounselor');
+                                              log('TAP AP DUNG name : $_findByNameCounselor');
 
                                               // FocusScope.of(context)
                                               //     .requestFocus(FocusNode());
@@ -632,12 +682,6 @@ class _SearchWidgetState extends State<SearchWidget> {
                                             child: Text('Apply'),
                                             onPressed: () {
                                               log('TAP AP DUNG');
-                                              // log(areaDropdow);
-                                              // log(typeDropdown);
-                                              // log(degreeDropdown);
-                                              // log(industryDropdown);
-                                              // FocusScope.of(context)
-                                              //     .requestFocus(FocusNode());
                                               Navigator.of(context).pop();
                                             },
                                             style: ElevatedButton.styleFrom(
@@ -665,7 +709,6 @@ class _SearchWidgetState extends State<SearchWidget> {
           boxShadow: [
             BoxShadow(
               color: Color(0xFF999999).withOpacity(0.6),
-              // offset: Offset(1, 1),
               blurRadius: 8,
             )
           ],

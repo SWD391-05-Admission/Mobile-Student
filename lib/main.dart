@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import './providers/user_controller.dart';
 import './screens/book_detail_screen.dart';
@@ -18,6 +20,7 @@ import './values/app_colors.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 Future main() async {
+  HttpOverrides.global = new MyHttpOverrides();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MyApp());
@@ -48,8 +51,8 @@ class MyApp extends StatelessWidget {
         ),
         initialRoute: LoginPage.routeName,
         routes: {
-          AuthenScreen.routeName: (context) => AuthenScreen(),
           LoginPage.routeName: (context) => const LoginPage(),
+          AuthenScreen.routeName: (context) => AuthenScreen(),
           BottomBar.routeName: (context) => const BottomBar(),
           ProfileScreen.routeName: (context) => const ProfileScreen(),
           UniversityScreen.routeName: (context) => const UniversityScreen(),
@@ -64,5 +67,14 @@ class MyApp extends StatelessWidget {
         },
       ),
     );
+  }
+}
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }

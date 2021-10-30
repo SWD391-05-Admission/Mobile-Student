@@ -2,7 +2,6 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:mobile_customer/providers/auth.dart';
 
 class GoogleSignInProvider extends ChangeNotifier {
   final googleSignIn = GoogleSignIn();
@@ -21,12 +20,7 @@ class GoogleSignInProvider extends ChangeNotifier {
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-    await FirebaseAuth.instance.signInWithCredential(credential).then((_) {
-      Authen auth = new Authen();
-      log('chay authen');
-      auth.authen();
-      // Authen.authen();
-    });
+    await FirebaseAuth.instance.signInWithCredential(credential);
     log('google user not null'.toUpperCase());
     notifyListeners();
   }
