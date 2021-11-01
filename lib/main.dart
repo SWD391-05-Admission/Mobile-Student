@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:mobile_customer/screens/talkshow_history_screen.dart';
 import './providers/user_controller.dart';
 import './screens/book_detail_screen.dart';
 import 'screens/counselor_detail_screen.dart';
@@ -64,6 +65,8 @@ class MyApp extends StatelessWidget {
               ConsultantDetailScreen(),
           TalkshowItem.routeName: (context) => const TalkshowItem(),
           BookDetailScreen.routeName: (context) => const BookDetailScreen(),
+          TalkshowDetailHistoryScreen.routeName: (context) =>
+              const TalkshowDetailHistoryScreen(),
         },
       ),
     );

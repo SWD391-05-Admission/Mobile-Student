@@ -219,10 +219,9 @@ class GetListCounselor {
                             ),
                             Expanded(child: SizedBox()),
                             GestureDetector(
-                              child: Text(
-                                'Thêm thông tin >>',
-                                style: AppStyle.bookDetail,
-                              ),
+                              child: Text('Chi tiết >>',
+                                  style: AppStyle.bookDetail
+                                      .copyWith(color: Color(0xFF3366FF))),
                               onTap: () {
                                 Navigator.of(context).pushNamed(
                                     '/counselor-detail-screen',
@@ -248,6 +247,11 @@ class GetListCounselor {
           ),
         ),
       );
+      (i < list.length - 1)
+          ? listWidget.add(SizedBox(
+              height: 8,
+            ))
+          : listWidget.add(SizedBox());
     }
     return listWidget;
   }

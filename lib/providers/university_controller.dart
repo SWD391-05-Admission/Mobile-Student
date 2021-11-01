@@ -3,7 +3,11 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:mobile_customer/models/address.dart';
+import 'package:mobile_customer/models/admission.dart';
+import 'package:mobile_customer/models/admissions.dart';
 import 'package:mobile_customer/models/distric.dart';
+import 'package:mobile_customer/models/major.dart';
+import 'package:mobile_customer/models/majors.dart';
 import 'package:mobile_customer/models/university.dart';
 import 'package:mobile_customer/values/app_value.dart';
 import 'package:http/http.dart' as http;
@@ -61,6 +65,24 @@ class UniversityConntroller extends ChangeNotifier {
           log('ADDRESS NEF ${address.address}');
           return address;
         }).toList();
+        List<Admissions> listAdmissions = [];
+        listAdmissions = (newData['admissions'] as List).map((dataAdmissions) {
+          Admission admission = Admission(
+              dataAdmissions['admission']['id'],
+              dataAdmissions['admission']['method'],
+              dataAdmissions['admission']['description']);
+          Admissions admissions = Admissions(dataAdmissions['id'], admission);
+          return admissions;
+        }).toList();
+        List<Majors> listMajors = [];
+        listMajors = (newData['majors'] as List).map((dataMajor) {
+          Major major = Major(
+              id: dataMajor['major']['id'],
+              name: dataMajor['major']['name'],
+              description: dataMajor['major']['description']);
+          Majors majors = Majors(dataMajor['id'], major);
+          return majors;
+        }).toList();
         University university = University(
           ID: newData['id'],
           code: newData['code'] ?? '',
@@ -74,6 +96,8 @@ class UniversityConntroller extends ChangeNotifier {
           minFee: newData['minFee'] ?? '',
           name: newData['name'] ?? '',
           website: newData['website'] ?? '',
+          listAdmission: listAdmissions,
+          listMajor: listMajors,
         );
         return university;
       }).toList();

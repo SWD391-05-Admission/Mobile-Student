@@ -49,7 +49,8 @@ class Authen {
         return '200';
       } else if (response.statusCode < 500) {
         log('< 500');
-        return data['message'];
+        throw (data['message']);
+        // return data['message'];
         // new GoogleSignInProvider().googleLogout();
       } else {
         log('500');
@@ -58,7 +59,7 @@ class Authen {
     } catch (error) {
       // throw error;
       log('ERROR in authen = ${error.toString()}');
-      return '';
+      return error.toString();
     }
   }
 }

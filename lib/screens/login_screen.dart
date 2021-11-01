@@ -12,7 +12,7 @@ class LoginPage extends StatelessWidget {
   const LoginPage();
   static const routeName = '/login-auth';
 
-  _getAuthen(BuildContext context) async {
+  Future _getAuthen(BuildContext context) async {
     await Authen().authen().then((value) {
       log('Mess $value');
       if (value == '500') {
@@ -22,6 +22,9 @@ class LoginPage extends StatelessWidget {
           listen: false,
         );
         provider.googleLogout();
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("Something wrong!"),
+        ));
         return AuthenScreen();
       } else if (value == '200') {
         log('return 200');
@@ -33,6 +36,9 @@ class LoginPage extends StatelessWidget {
         );
         provider.googleLogout();
         log('return 400');
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("Your email not allow! $value"),
+        ));
         return AuthenScreen();
       }
     });
@@ -49,7 +55,9 @@ class LoginPage extends StatelessWidget {
           return Center(child: CircularProgressIndicator());
         } else if (snapshot.hasData) {
           log('snapshot has data'.toUpperCase());
-          _getAuthen(context); //open
+          _getAuthen(context).then((_) {
+            return BottomBar();
+          }); //open
           return BottomBar();
         } else if (snapshot.hasError) {
           log('snapshot has error'.toUpperCase());

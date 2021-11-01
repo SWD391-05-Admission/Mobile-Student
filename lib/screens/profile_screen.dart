@@ -89,7 +89,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           elevation: 5,
           title: Text(
             'Bạn có muốn đăng xuất không ?',
-            style: AppStyle.h1.copyWith(fontSize: 19),
+            style: AppStyle.h1.copyWith(fontSize: 16),
             textAlign: TextAlign.center,
           ),
           actions: <Widget>[
@@ -97,7 +97,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               style: ElevatedButton.styleFrom(primary: Color(0xFFDDDDDD)),
               child: Text(
                 'Không',
-                style: AppStyle.h2,
+                style: AppStyle.h2.copyWith(fontSize: 15),
               ),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -107,7 +107,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               style: ElevatedButton.styleFrom(primary: Color(0xFFDDDDDD)),
               child: Text(
                 'Có',
-                style: AppStyle.h2,
+                style: AppStyle.h2.copyWith(fontSize: 15),
               ),
               onPressed: () {
                 final provider = Provider.of<GoogleSignInProvider>(
@@ -307,8 +307,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return DefaultTabController(
       length: 2,
       child: FutureBuilder<User>(
-        future: UserController().getUser(),
-        // future: _getUser,
+        // future: UserController().getUser(),
+        future: _getUser,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(

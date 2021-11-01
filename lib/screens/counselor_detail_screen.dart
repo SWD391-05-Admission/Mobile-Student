@@ -105,91 +105,109 @@ class ConsultantDetailScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: _sizeHeight * 0.002),
+                  SizedBox(height: _sizeHeight * 0.004),
                   RichText(
                     text: TextSpan(
                       text: 'Họ và Tên : ',
-                      style: AppStyle.counselorDetail,
+                      style: AppStyle.counselorDetail.copyWith(
+                        fontSize: 14,
+                      ),
                       children: <TextSpan>[
                         TextSpan(
                           text: '${counselor.fullName}',
                           style: AppStyle.counselorDetail.copyWith(
                             fontWeight: FontWeight.bold,
+                            fontSize: 14,
                           ),
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(height: _sizeHeight * 0.005),
+                  SizedBox(height: _sizeHeight * 0.014),
                   RichText(
                     text: TextSpan(
                       text: 'Email : ',
-                      style: AppStyle.counselorDetail,
+                      style: AppStyle.counselorDetail.copyWith(
+                        fontSize: 14,
+                      ),
                       children: <TextSpan>[
                         TextSpan(
                           text: '${counselor.email}',
                           style: AppStyle.counselorDetail.copyWith(
                             fontWeight: FontWeight.bold,
+                            fontSize: 14,
                           ),
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(height: _sizeHeight * 0.005),
+                  SizedBox(height: _sizeHeight * 0.014),
                   RichText(
                     text: TextSpan(
                       text: 'Số điện thoại : ',
-                      style: AppStyle.counselorDetail,
+                      style: AppStyle.counselorDetail.copyWith(
+                        fontSize: 14,
+                      ),
                       children: <TextSpan>[
                         TextSpan(
                           text: '${counselor.phone}',
                           style: AppStyle.counselorDetail.copyWith(
                             fontWeight: FontWeight.bold,
+                            fontSize: 14,
                           ),
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(height: _sizeHeight * 0.005),
+                  SizedBox(height: _sizeHeight * 0.014),
                   RichText(
                     text: TextSpan(
                       text: 'Địa chỉ : ',
-                      style: AppStyle.counselorDetail,
+                      style: AppStyle.counselorDetail.copyWith(
+                        fontSize: 14,
+                      ),
                       children: <TextSpan>[
                         TextSpan(
                           text: '${counselor.address}',
                           style: AppStyle.counselorDetail.copyWith(
                             fontWeight: FontWeight.bold,
+                            fontSize: 14,
                           ),
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(height: _sizeHeight * 0.005),
+                  SizedBox(height: _sizeHeight * 0.014),
                   RichText(
                     text: TextSpan(
                       text: 'Ngày sinh : ',
-                      style: AppStyle.counselorDetail,
+                      style: AppStyle.counselorDetail.copyWith(
+                        fontSize: 14,
+                      ),
                       children: <TextSpan>[
                         TextSpan(
                           text: '${counselor.birthday}',
                           style: AppStyle.counselorDetail.copyWith(
                             fontWeight: FontWeight.bold,
+                            fontSize: 14,
                           ),
                         ),
                         // TextSpan(text: ' world!'),
                       ],
                     ),
                   ),
-                  SizedBox(height: _sizeHeight * 0.005),
+                  SizedBox(height: _sizeHeight * 0.014),
                   Text(
                     'Giới thiệu bản thân : ',
-                    style: AppStyle.counselorDetail,
+                    style: AppStyle.counselorDetail.copyWith(
+                      fontSize: 14.3,
+                    ),
                   ),
+                  SizedBox(height: _sizeHeight * 0.005),
                   Text(
                     '- ${counselor.description}',
-                    style: AppStyle.counselorDetail
-                        .copyWith(fontStyle: FontStyle.italic),
+                    style: AppStyle.counselorDetail.copyWith(
+                        fontStyle: FontStyle.italic, fontSize: 14, height: 1.8),
                   ),
                   // RichText(
                   //   text: TextSpan(
@@ -223,7 +241,8 @@ class ConsultantDetailScreen extends StatelessWidget {
                   // ),
                 ],
               ),
-            )
+            ),
+            SizedBox(height: _sizeHeight * 0.1),
           ],
         ),
       ),

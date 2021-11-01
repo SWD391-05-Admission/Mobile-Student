@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:mobile_customer/providers/talkshow_controller.dart';
 import 'package:mobile_customer/providers/university_controller.dart';
 import 'package:mobile_customer/values/app_fonts.dart';
 import 'package:mobile_customer/values/app_value.dart';
@@ -22,7 +23,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  bool isTalkshow = false, isCounselor = true, isUniversity = false;
+  bool isTalkshow = true, isCounselor = false, isUniversity = false;
   int _currentPage = 1;
   int _limit = 2;
 
@@ -44,7 +45,12 @@ class _HomeScreenState extends State<HomeScreen> {
         .getListUniversity('', '', '', _currentPage, _limit);
   }
 
-  Future<List<Talkshow>> _getListTalkshow() {}
+  Future<Map<String, List<Talkshow>>> _getListTalkshow(String txtSearch) {
+    log('get list talkshow');
+    log('curent page ========================= $_currentPage');
+    return TalkshowController()
+        .getListTalkshow('', '', '', _currentPage, _limit);
+  }
 
   _paging(String numOfPage) {
     int numPage = int.parse(numOfPage);
@@ -68,6 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
             onTap: () {
               setState(() {
                 _currentPage = i;
+
                 myFuture = _getList(txtSearch);
               });
             },
@@ -89,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
       return _getListCounselor(txtSearch);
     } else if (isTalkshow) {
       log('vo get talkshow');
-      return _getListTalkshow;
+      return _getListTalkshow(txtSearch);
     } else {
       log('vo get university');
       return _getListUniversity(txtSearch);
@@ -108,6 +115,9 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _findByTenTruong = true, _tmpFindTenTruong = true;
   bool _findByEmailTruong = true, _tmpFindEmailTruong = true;
   bool _findBySdtTruong = true, _tmpFindSdtTruong = true;
+  bool _findByNameTalkshow = true, _tmpFindNameTalkshow = true;
+  bool _findByPhoneTalkshow = true, _tmpFindPhoneTalkshow = true;
+  bool _findByEmailTalkshow = true, _tmpFindEmailTalkshow = true;
   String txtSearch = '';
 
   _searchWidget(height, width) {
@@ -133,7 +143,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Expanded(
               child: Padding(
-                padding: EdgeInsets.only(top: 5), // chỉnh sửa search
+                padding: EdgeInsets.only(top: 0), // chỉnh sửa search
                 child: TextField(
                   textAlign: TextAlign.start,
                   controller: searchController,
@@ -147,7 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         left: width * 0.01, bottom: height * 0.012),
                     hintText: " Tìm kiếm",
                     hintStyle: AppStyle.h2
-                        .copyWith(color: Colors.black26, fontSize: 15),
+                        .copyWith(color: Colors.black26, fontSize: 14),
                   ),
                   cursorColor: Colors.black12,
                   cursorWidth: 0.5,
@@ -207,122 +217,190 @@ class _HomeScreenState extends State<HomeScreen> {
                             builder: (context) {
                               // String areaDropdow;
                               return StatefulBuilder(
-                                  builder: (context, setState) {
-                                return SimpleDialog(
-                                  // key: _formKey,
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 20),
-                                      child: Text(
-                                        'Area',
-                                        style: TextStyle(
-                                          fontFamily: AppFonts.poppins,
-                                          fontSize: 18,
+                                builder: (context, setState) {
+                                  return SimpleDialog(
+                                    // key: _formKey,
+                                    children: <Widget>[
+                                      SizedBox(
+                                        height: height * 0.01,
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20),
+                                        child: Text(
+                                          'Bộ lọc tìm kiếm',
+                                          style: AppStyle.titleSearch.copyWith(
+                                            fontSize: 20,
+                                          ),
+                                          textAlign: TextAlign.center,
                                         ),
                                       ),
-                                    ),
-                                    SizedBox(height: height * 0.01),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 20),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            'Area',
-                                            overflow: TextOverflow.ellipsis,
-                                            style: AppStyle.dropdownStyle,
-                                          ),
-                                          Expanded(child: SizedBox()),
-                                          DropdownButtonHideUnderline(
-                                            child: DropdownButton<String>(
-                                              // style: TextSty,
-
-                                              value: areaDropdow,
-                                              items: <String>[
-                                                ...AppValue.listKhuVuc
-                                              ].map((String value) {
-                                                return DropdownMenuItem<String>(
-                                                  value: value,
-                                                  child: Row(
-                                                    children: [
-                                                      SizedBox(
-                                                        width: 140,
-                                                        child: Text(
-                                                          value,
-                                                          textAlign:
-                                                              TextAlign.right,
-                                                          style: AppStyle
-                                                              .dropdownStyle,
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        width: 3,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                );
-                                              }).toList(),
+                                      SizedBox(height: height * 0.015),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 20, right: 8),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              'Tìm bằng họ tên diễn giả',
+                                              overflow: TextOverflow.ellipsis,
+                                              style:
+                                                  AppStyle.bookDetail.copyWith(
+                                                fontSize: 13,
+                                              ),
+                                            ),
+                                            Expanded(child: SizedBox()),
+                                            Checkbox(
+                                              value: _findByNameTalkshow,
                                               onChanged: (newValue) {
+                                                log(newValue.toString());
                                                 setState(() {
-                                                  areaDropdow = newValue;
-                                                  log('Khu vuc ne: $areaDropdow');
-                                                  log('Khu vuc newValue ne: $newValue');
+                                                  _findByNameTalkshow =
+                                                      newValue;
                                                 });
                                               },
+                                              checkColor: Colors.white,
+                                              activeColor: Colors.green,
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                    SizedBox(height: height * 0.03),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 20),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          ElevatedButton(
-                                            child: Text('Cancle'),
-                                            onPressed: () {
-                                              print('TAP HUY BO');
-                                              areaDropdow = null;
-                                              typeDropdown = null;
-                                              degreeDropdown = null;
-                                              industryDropdown = null;
-                                              Navigator.of(context).pop();
-                                            },
-                                            style: ElevatedButton.styleFrom(
-                                              primary: Color(0xFFEEEEEEE),
-                                              // elevation: 1,
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 20, right: 8),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              'Tìm bằng chuyên ngành',
+                                              overflow: TextOverflow.ellipsis,
+                                              style:
+                                                  AppStyle.bookDetail.copyWith(
+                                                fontSize: 13,
+                                              ),
                                             ),
-                                          ),
-                                          SizedBox(
-                                            width: 10,
-                                            // height: 1,
-                                          ),
-                                          ElevatedButton(
-                                            child: Text('Apply'),
-                                            onPressed: () {
-                                              log('TAP AP DUNG');
+                                            Expanded(child: SizedBox()),
+                                            Checkbox(
+                                              value: _findByEmailTalkshow,
+                                              onChanged: (newValue) {
+                                                log(newValue.toString());
+                                                setState(() {
+                                                  _findByEmailTalkshow =
+                                                      newValue;
+                                                });
+                                              },
+                                              checkColor: Colors.white,
+                                              activeColor: Colors.green,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 20, right: 8),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              'Tìm bằng tên trường',
+                                              overflow: TextOverflow.ellipsis,
+                                              style:
+                                                  AppStyle.bookDetail.copyWith(
+                                                fontSize: 13,
+                                              ),
+                                            ),
+                                            Expanded(child: SizedBox()),
+                                            Checkbox(
+                                              value: _findByPhoneTalkshow,
+                                              onChanged: (newValue) {
+                                                log(newValue.toString());
+                                                setState(() {
+                                                  _findByPhoneTalkshow =
+                                                      newValue;
+                                                });
+                                              },
+                                              checkColor: Colors.white,
+                                              activeColor: Colors.green,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(height: height * 0.01),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            ElevatedButton(
+                                              child: Text(
+                                                'Hủy bỏ',
+                                                style: TextStyle(
+                                                  fontFamily:
+                                                      AppFonts.montserrat,
+                                                ),
+                                              ),
+                                              onPressed: () {
+                                                // _findByEmailCounselor = false;
+                                                // _findByNameCounselor = false;
+                                                // _findByPhoneCounselor = false;
+                                                (_tmpFindEmailTalkshow)
+                                                    ? _findByEmailTalkshow =
+                                                        true
+                                                    : _findByEmailTalkshow =
+                                                        false;
+                                                (_tmpFindNameTalkshow)
+                                                    ? _findByNameTalkshow = true
+                                                    : _findByNameTalkshow =
+                                                        false;
+                                                (_tmpFindPhoneTalkshow)
+                                                    ? _findByPhoneTalkshow =
+                                                        true
+                                                    : _findByPhoneTalkshow =
+                                                        false;
+                                                Navigator.of(context).pop();
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                primary: Color(0xFFEEEEEEE),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 10,
+                                              // height: 1,
+                                            ),
+                                            ElevatedButton(
+                                              child: Text(
+                                                'Áp dụng',
+                                                style: TextStyle(
+                                                  fontFamily:
+                                                      AppFonts.montserrat,
+                                                ),
+                                              ),
+                                              onPressed: () {
+                                                log('TAP AP DUNG email : $_findByEmailTalkshow');
+                                                log('TAP AP DUNG phone : $_findByPhoneTalkshow');
+                                                log('TAP AP DUNG name : $_findByNameTalkshow');
 
-                                              // FocusScope.of(context)
-                                              //     .requestFocus(FocusNode());
-                                              Navigator.of(context).pop();
-                                            },
-                                            style: ElevatedButton.styleFrom(
-                                              primary: Color(0xFFEEEEEEE),
+                                                // FocusScope.of(context)
+                                                //     .requestFocus(FocusNode());
+                                                Navigator.of(context).pop();
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                primary: Color(0xFFEEEEEEE),
+                                              ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                );
-                              });
+                                    ],
+                                  );
+                                },
+                              );
                             },
                           );
                         } else if (isCounselor) {
@@ -1156,6 +1234,10 @@ class _HomeScreenState extends State<HomeScreen> {
             Map<String, List<Talkshow>> mapTalkshow = snapshot.data;
             String numberOfPage = mapTalkshow.keys.elementAt(0);
             List<Talkshow> list = mapTalkshow.entries.first.value;
+
+            // Map<String, List<Counselor>> mapCounselor = snapshot.data;
+            // String numberOfPage = mapCounselor.keys.elementAt(0);
+            // List<Counselor> list = mapCounselor.entries.first.value;
             return ListView(
               children: [
                 CarouselWidget(),

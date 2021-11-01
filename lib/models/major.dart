@@ -1,14 +1,14 @@
 import 'package:mobile_customer/models/university.dart';
 
 class Major {
-  String code;
+  int id;
   String name;
-  List<University> listUniversity;
+  String description;
 
   Major({
-    this.code,
+    this.id,
     this.name,
-    this.listUniversity,
+    this.description,
   });
 
   // static Major createMajor() {

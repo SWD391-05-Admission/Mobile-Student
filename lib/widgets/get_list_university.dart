@@ -49,6 +49,7 @@ class GetListUniversity {
                         ),
                         child: Image.network(list[i].image),
                       ),
+
                       SizedBox(
                         height: sizeHeight * 0.01,
                       ),
@@ -66,32 +67,60 @@ class GetListUniversity {
                       // ),
                       Padding(
                         padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: RichText(
-                          text: TextSpan(
-                            text: 'Mã trường : ',
-                            style: AppStyle.bookDetail.copyWith(
-                              color: Colors.black,
-                            ),
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: '${list[i].code}',
-                                style: TextStyle(
-                                  fontFamily: AppFonts.poppins,
-                                  fontSize: 12,
-                                  shadows: [
-                                    Shadow(
-                                      // offset: Offset(1.0, 1.0),
-                                      blurRadius: 8,
-                                      color: Color(0xFF999999),
-                                    ),
-                                  ],
-                                  fontWeight: FontWeight.bold,
-                                  // fontStyle: FontStyle.italic,
-                                ),
+                        // child: RichText(
+                        //   text: TextSpan(
+                        //     text: 'Mã trường : ',
+                        //     style: AppStyle.bookDetail.copyWith(
+                        //       color: Colors.black,
+                        //     ),
+                        //     children: <TextSpan>[
+                        //       TextSpan(
+                        //         text: '${list[i].code}',
+                        //         style: TextStyle(
+                        //           fontFamily: AppFonts.poppins,
+                        //           fontSize: 12,
+                        //           shadows: [
+                        //             Shadow(
+                        //               // offset: Offset(1.0, 1.0),
+                        //               blurRadius: 8,
+                        //               color: Color(0xFF999999),
+                        //             ),
+                        //           ],
+                        //           fontWeight: FontWeight.bold,
+                        //           // fontStyle: FontStyle.italic,
+                        //         ),
+                        //       ),
+                        //       // TextSpan(text: ' world!'),
+                        //     ],
+                        //   ),
+                        // ),
+                        child: Wrap(
+                          children: [
+                            Text(
+                              'Mã trường : ',
+                              style: AppStyle.bookDetail.copyWith(
+                                color: Colors.black,
+                                fontSize: 13,
                               ),
-                              // TextSpan(text: ' world!'),
-                            ],
-                          ),
+                            ),
+                            Text(
+                              '${list[i].code}',
+                              style: TextStyle(
+                                fontFamily: AppFonts.poppins,
+                                fontSize: 13,
+                                shadows: [
+                                  Shadow(
+                                    // offset: Offset(1.0, 1.0),
+                                    blurRadius: 8,
+                                    color: Color(0xFF999999),
+                                  ),
+                                ],
+                                fontWeight: FontWeight.bold,
+                                // fontStyle: FontStyle.italic,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
                         ),
                       ),
                       SizedBox(
@@ -99,32 +128,60 @@ class GetListUniversity {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: RichText(
-                          text: TextSpan(
-                            text: 'Tên trường : ',
-                            style: AppStyle.bookDetail.copyWith(
-                              color: Colors.black,
-                            ),
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: '${list[i].name}',
-                                style: TextStyle(
-                                  fontFamily: AppFonts.poppins,
-                                  fontSize: 12,
-                                  shadows: [
-                                    Shadow(
-                                      // offset: Offset(1.0, 1.0),
-                                      blurRadius: 8,
-                                      color: Color(0xFF999999),
-                                    ),
-                                  ],
-                                  fontWeight: FontWeight.bold,
-                                  // fontStyle: FontStyle.italic,
-                                ),
+                        // child: RichText(
+                        //   text: TextSpan(
+                        //     text: 'Tên trường : ',
+                        //     style: AppStyle.bookDetail.copyWith(
+                        //       color: Colors.black,
+                        //     ),
+                        //     children: <TextSpan>[
+                        //       TextSpan(
+                        //         text: '${list[i].name}',
+                        //         style: TextStyle(
+                        //           fontFamily: AppFonts.poppins,
+                        //           fontSize: 12,
+                        //           shadows: [
+                        //             Shadow(
+                        //               // offset: Offset(1.0, 1.0),
+                        //               blurRadius: 8,
+                        //               color: Color(0xFF999999),
+                        //             ),
+                        //           ],
+                        //           fontWeight: FontWeight.bold,
+                        //           // fontStyle: FontStyle.italic,
+                        //         ),
+                        //       ),
+                        //       // TextSpan(text: ' world!'),
+                        //     ],
+                        //   ),
+                        // ),
+                        child: Wrap(
+                          children: [
+                            Text(
+                              'Tên trường : ',
+                              style: AppStyle.bookDetail.copyWith(
+                                color: Colors.black,
+                                fontSize: 13,
                               ),
-                              // TextSpan(text: ' world!'),
-                            ],
-                          ),
+                            ),
+                            Text(
+                              '${list[i].name}',
+                              style: TextStyle(
+                                fontFamily: AppFonts.poppins,
+                                fontSize: 13,
+                                shadows: [
+                                  Shadow(
+                                    // offset: Offset(1.0, 1.0),
+                                    blurRadius: 8,
+                                    color: Color(0xFF999999),
+                                  ),
+                                ],
+                                fontWeight: FontWeight.bold,
+                                // fontStyle: FontStyle.italic,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
                         ),
                       ),
                       SizedBox(
@@ -132,32 +189,60 @@ class GetListUniversity {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: RichText(
-                          text: TextSpan(
-                            text: 'Email : ',
-                            style: AppStyle.bookDetail.copyWith(
-                              color: Colors.black,
-                            ),
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: '${list[i].email}',
-                                style: TextStyle(
-                                  fontFamily: AppFonts.poppins,
-                                  fontSize: 12,
-                                  shadows: [
-                                    Shadow(
-                                      // offset: Offset(1.0, 1.0),
-                                      blurRadius: 8,
-                                      color: Color(0xFF999999),
-                                    ),
-                                  ],
-                                  fontWeight: FontWeight.bold,
-                                  // fontStyle: FontStyle.italic,
-                                ),
+                        // child: RichText(
+                        //   text: TextSpan(
+                        //     text: 'Email : ',
+                        //     style: AppStyle.bookDetail.copyWith(
+                        //       color: Colors.black,
+                        //     ),
+                        //     children: <TextSpan>[
+                        //       TextSpan(
+                        //         text: '${list[i].email}',
+                        //         style: TextStyle(
+                        //           fontFamily: AppFonts.poppins,
+                        //           fontSize: 12,
+                        //           shadows: [
+                        //             Shadow(
+                        //               // offset: Offset(1.0, 1.0),
+                        //               blurRadius: 8,
+                        //               color: Color(0xFF999999),
+                        //             ),
+                        //           ],
+                        //           fontWeight: FontWeight.bold,
+                        //           // fontStyle: FontStyle.italic,
+                        //         ),
+                        //       ),
+                        //       // TextSpan(text: ' world!'),
+                        //     ],
+                        //   ),
+                        // ),
+                        child: Wrap(
+                          children: [
+                            Text(
+                              'Email : ',
+                              style: AppStyle.bookDetail.copyWith(
+                                color: Colors.black,
+                                fontSize: 13,
                               ),
-                              // TextSpan(text: ' world!'),
-                            ],
-                          ),
+                            ),
+                            Text(
+                              '${list[i].email}',
+                              style: TextStyle(
+                                fontFamily: AppFonts.poppins,
+                                fontSize: 13,
+                                shadows: [
+                                  Shadow(
+                                    // offset: Offset(1.0, 1.0),
+                                    blurRadius: 8,
+                                    color: Color(0xFF999999),
+                                  ),
+                                ],
+                                fontWeight: FontWeight.bold,
+                                // fontStyle: FontStyle.italic,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
                         ),
                       ),
                       SizedBox(
@@ -165,32 +250,60 @@ class GetListUniversity {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: RichText(
-                          text: TextSpan(
-                            text: 'Facebook : ',
-                            style: AppStyle.bookDetail.copyWith(
-                              color: Colors.black,
-                            ),
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: '${list[i].facebook}',
-                                style: TextStyle(
-                                  fontFamily: AppFonts.poppins,
-                                  fontSize: 12,
-                                  shadows: [
-                                    Shadow(
-                                      // offset: Offset(1.0, 1.0),
-                                      blurRadius: 8,
-                                      color: Color(0xFF999999),
-                                    ),
-                                  ],
-                                  fontWeight: FontWeight.bold,
-                                  // fontStyle: FontStyle.italic,
-                                ),
+                        // child: RichText(
+                        //   text: TextSpan(
+                        //     text: 'Facebook : ',
+                        //     style: AppStyle.bookDetail.copyWith(
+                        //       color: Colors.black,
+                        //     ),
+                        //     children: <TextSpan>[
+                        //       TextSpan(
+                        //         text: '${list[i].facebook}',
+                        //         style: TextStyle(
+                        //           fontFamily: AppFonts.poppins,
+                        //           fontSize: 12,
+                        //           shadows: [
+                        //             Shadow(
+                        //               // offset: Offset(1.0, 1.0),
+                        //               blurRadius: 8,
+                        //               color: Color(0xFF999999),
+                        //             ),
+                        //           ],
+                        //           fontWeight: FontWeight.bold,
+                        //           // fontStyle: FontStyle.italic,
+                        //         ),
+                        //       ),
+                        //       // TextSpan(text: ' world!'),
+                        //     ],
+                        //   ),
+                        // ),
+                        child: Wrap(
+                          children: [
+                            Text(
+                              'Facebook : ',
+                              style: AppStyle.bookDetail.copyWith(
+                                color: Colors.black,
+                                fontSize: 13,
                               ),
-                              // TextSpan(text: ' world!'),
-                            ],
-                          ),
+                            ),
+                            Text(
+                              '${list[i].facebook}',
+                              style: TextStyle(
+                                fontFamily: AppFonts.poppins,
+                                fontSize: 13,
+                                shadows: [
+                                  Shadow(
+                                    // offset: Offset(1.0, 1.0),
+                                    blurRadius: 8,
+                                    color: Color(0xFF999999),
+                                  ),
+                                ],
+                                fontWeight: FontWeight.bold,
+                                // fontStyle: FontStyle.italic,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
                         ),
                       ),
                       SizedBox(
@@ -198,33 +311,61 @@ class GetListUniversity {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 10, right: 10),
-                        child: RichText(
-                          text: TextSpan(
-                            text: 'Học phí : ',
-                            style: AppStyle.bookDetail.copyWith(
-                              color: Colors.black,
-                            ),
-                            children: <TextSpan>[
-                              TextSpan(
-                                text:
-                                    '${list[i].minFee} - ${list[i].maxFee} đồng/năm',
-                                style: TextStyle(
-                                  fontFamily: AppFonts.poppins,
-                                  fontSize: 12,
-                                  shadows: [
-                                    Shadow(
-                                      // offset: Offset(1.0, 1.0),
-                                      blurRadius: 8,
-                                      color: Color(0xFF999999),
-                                    ),
-                                  ],
-                                  fontWeight: FontWeight.bold,
-                                  // fontStyle: FontStyle.italic,
-                                ),
+                        // child: RichText(
+                        //   text: TextSpan(
+                        //     text: 'Học phí : ',
+                        //     style: AppStyle.bookDetail.copyWith(
+                        //       color: Colors.black,
+                        //     ),
+                        //     children: <TextSpan>[
+                        //       TextSpan(
+                        //         text:
+                        //             '${list[i].minFee} - ${list[i].maxFee} đồng/năm',
+                        //         style: TextStyle(
+                        //           fontFamily: AppFonts.poppins,
+                        //           fontSize: 12,
+                        //           shadows: [
+                        //             Shadow(
+                        //               // offset: Offset(1.0, 1.0),
+                        //               blurRadius: 8,
+                        //               color: Color(0xFF999999),
+                        //             ),
+                        //           ],
+                        //           fontWeight: FontWeight.bold,
+                        //           // fontStyle: FontStyle.italic,
+                        //         ),
+                        //       ),
+                        //       // TextSpan(text: ' world!'),
+                        //     ],
+                        //   ),
+                        // ),
+                        child: Wrap(
+                          children: [
+                            Text(
+                              'Học phí : ',
+                              style: AppStyle.bookDetail.copyWith(
+                                color: Colors.black,
+                                fontSize: 13,
                               ),
-                              // TextSpan(text: ' world!'),
-                            ],
-                          ),
+                            ),
+                            Text(
+                              '${list[i].minFee} - ${list[i].maxFee} đồng/năm',
+                              style: TextStyle(
+                                fontFamily: AppFonts.poppins,
+                                fontSize: 13,
+                                shadows: [
+                                  Shadow(
+                                    // offset: Offset(1.0, 1.0),
+                                    blurRadius: 8,
+                                    color: Color(0xFF999999),
+                                  ),
+                                ],
+                                fontWeight: FontWeight.bold,
+                                // fontStyle: FontStyle.italic,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
                         ),
                       ),
                       SizedBox(
@@ -234,18 +375,51 @@ class GetListUniversity {
                         padding: const EdgeInsets.only(left: 10, right: 10),
                         child: Row(
                           children: [
-                            RichText(
-                              text: TextSpan(
-                                text: 'Website : ',
-                                style: AppStyle.bookDetail.copyWith(
-                                  color: Colors.black,
-                                ),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                    text: '${list[i].website}',
+                            // RichText(
+                            //   text: TextSpan(
+                            //     text: 'Website : ',
+                            //     style: AppStyle.bookDetail.copyWith(
+                            //       color: Colors.black,
+                            //     ),
+                            //     children: <TextSpan>[
+                            //       TextSpan(
+                            //         text: '${list[i].website}',
+                            //         style: TextStyle(
+                            //           fontFamily: AppFonts.poppins,
+                            //           fontSize: 12,
+                            //           shadows: [
+                            //             Shadow(
+                            //               // offset: Offset(1.0, 1.0),
+                            //               blurRadius: 8,
+                            //               color: Color(0xFF999999),
+                            //             ),
+                            //           ],
+                            //           fontWeight: FontWeight.bold,
+
+                            //           // fontStyle: FontStyle.italic,
+                            //         ),
+                            //       ),
+                            //       // TextSpan(text: ' world!'),
+                            //     ],
+                            //   ),
+                            //   overflow: TextOverflow.ellipsis,
+                            // ),
+                            Expanded(
+                              child: Wrap(
+                                children: [
+                                  Text(
+                                    'Website : ',
+                                    style: AppStyle.bookDetail.copyWith(
+                                      color: Colors.black,
+                                      fontSize: 13,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
+                                    '${list[i].website} ',
                                     style: TextStyle(
                                       fontFamily: AppFonts.poppins,
-                                      fontSize: 12,
+                                      fontSize: 13,
                                       shadows: [
                                         Shadow(
                                           // offset: Offset(1.0, 1.0),
@@ -254,20 +428,19 @@ class GetListUniversity {
                                         ),
                                       ],
                                       fontWeight: FontWeight.bold,
-
                                       // fontStyle: FontStyle.italic,
                                     ),
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                  // TextSpan(text: ' world!'),
                                 ],
                               ),
-                              overflow: TextOverflow.ellipsis,
                             ),
-                            Expanded(child: SizedBox()),
+                            // Expanded(child: SizedBox()),
                             GestureDetector(
                               child: Text(
-                                'Thêm thông tin >>',
-                                style: AppStyle.bookDetail,
+                                'Chi tiết >>',
+                                style: AppStyle.bookDetail
+                                    .copyWith(color: Color(0xFF3366FF)),
                               ),
                               onTap: () {
                                 Navigator.of(context).pushNamed(
@@ -294,6 +467,11 @@ class GetListUniversity {
           ),
         ),
       );
+      (i < list.length - 1)
+          ? listWidget.add(SizedBox(
+              height: 8,
+            ))
+          : listWidget.add(SizedBox());
     }
     return listWidget;
   }

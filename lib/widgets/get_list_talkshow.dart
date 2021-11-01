@@ -6,7 +6,10 @@ import '../widgets/search_widget.dart';
 
 class GetListTalkshow {
   List<Widget> getListTalkshow(
-      List<Talkshow> list, double sizeHeight, BuildContext context) {
+    List<Talkshow> list,
+    double sizeHeight,
+    BuildContext context,
+  ) {
     List<Widget> listWidget = [];
     // listWidget.add(SearchWidget(nameSearch: 'talkshow'));
     listWidget.add(SizedBox(height: sizeHeight * 0.015));
@@ -58,7 +61,7 @@ class GetListTalkshow {
                           '${list[i].description}',
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
-                          style: AppStyle.bookDetail,
+                          style: AppStyle.bookDetail.copyWith(fontSize: 13),
                         ),
                       ),
                       SizedBox(
@@ -68,7 +71,7 @@ class GetListTalkshow {
                         padding: const EdgeInsets.only(left: 10, right: 10),
                         child: RichText(
                           text: TextSpan(
-                            text: 'Counselor : ',
+                            text: 'Diễn giả : ',
                             style: AppStyle.bookDetail.copyWith(
                               color: Colors.black,
                             ),
@@ -101,14 +104,14 @@ class GetListTalkshow {
                         padding: const EdgeInsets.only(left: 10, right: 10),
                         child: RichText(
                           text: TextSpan(
-                            text: 'Date time : ',
+                            text: 'Thời gian bắt đầu : ',
                             style: AppStyle.bookDetail.copyWith(
                               color: Colors.black,
                             ),
                             children: <TextSpan>[
                               TextSpan(
                                 text:
-                                    'at ${list[i].timeStart} - ${list[i].timeFinish} ${list[i].date}',
+                                    'vào lúc ${list[i].timeStart} ngày ${list[i].timeFinish} ${list[i].date}',
                                 style: TextStyle(
                                   fontFamily: AppFonts.poppins,
                                   fontSize: 12,
@@ -135,7 +138,7 @@ class GetListTalkshow {
                         padding: const EdgeInsets.only(left: 10, right: 10),
                         child: RichText(
                           text: TextSpan(
-                            text: 'Major : ',
+                            text: 'Chuyên nghành : ',
                             style: AppStyle.bookDetail.copyWith(
                               color: Colors.black,
                             ),
@@ -170,7 +173,7 @@ class GetListTalkshow {
                           children: [
                             RichText(
                               text: TextSpan(
-                                text: 'Price : ',
+                                text: 'Giá : ',
                                 style: AppStyle.bookDetail.copyWith(
                                   color: Colors.black,
                                 ),
@@ -191,6 +194,7 @@ class GetListTalkshow {
                                       // fontStyle: FontStyle.italic,
                                     ),
                                   ),
+
                                   // TextSpan(text: ' world!'),
                                 ],
                               ),
@@ -198,7 +202,18 @@ class GetListTalkshow {
                             Expanded(child: SizedBox()),
                             GestureDetector(
                               child: Text(
-                                'See Detail >>',
+                                '<< Đăng kí ngay | ',
+                                style: AppStyle.bookDetail,
+                              ),
+                              onTap: () {
+                                Navigator.of(context).pushNamed(
+                                    '/talkshow-detail-screen',
+                                    arguments: list[i]);
+                              },
+                            ),
+                            GestureDetector(
+                              child: Text(
+                                'Chi tiết >>',
                                 style: AppStyle.bookDetail,
                               ),
                               onTap: () {
@@ -226,6 +241,11 @@ class GetListTalkshow {
           ),
         ),
       );
+      (i < list.length - 1)
+          ? listWidget.add(SizedBox(
+              height: 8,
+            ))
+          : listWidget.add(SizedBox());
     }
     return listWidget;
   }

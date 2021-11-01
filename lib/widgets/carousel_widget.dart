@@ -38,6 +38,17 @@ class _CarouselWidgetState extends State<CarouselWidget> {
     return list;
   }
 
+  // Future getListADS(BuildContext context){
+  //   List<Talkshow> listTalkshow =
+  // }
+
+  Future myFuture;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final double _sizeHeight = MediaQuery.of(context).size.height -

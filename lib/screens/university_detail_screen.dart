@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_customer/models/admissions.dart';
 import 'package:mobile_customer/models/university.dart';
 import 'package:mobile_customer/values/app_fonts.dart';
 import 'package:mobile_customer/values/app_styles.dart';
@@ -19,7 +20,7 @@ class UniversityDetailScreen extends StatelessWidget {
         list.add(
           Text(
             '>>  ${university.listAddress[i].address}, ${university.listAddress[i].district.name}', //need feed
-            style: AppStyle.bookDetail,
+            style: AppStyle.bookDetail.copyWith(fontSize: 14),
           ),
         );
       }
@@ -57,13 +58,14 @@ class UniversityDetailScreen extends StatelessWidget {
                       text: 'Mã trường : ',
                       style: AppStyle.bookDetail.copyWith(
                         color: Colors.black,
+                        fontSize: 13,
                       ),
                       children: <TextSpan>[
                         TextSpan(
                           text: '${university.code}',
                           style: TextStyle(
                             fontFamily: AppFonts.poppins,
-                            fontSize: 12,
+                            fontSize: 13,
                             shadows: [
                               Shadow(
                                 // offset: Offset(1.0, 1.0),
@@ -71,7 +73,7 @@ class UniversityDetailScreen extends StatelessWidget {
                                 color: Color(0xFF999999),
                               ),
                             ],
-                            fontWeight: FontWeight.bold,
+                            // fontWeight: FontWeight.bold,
                             // fontStyle: FontStyle.italic,
                           ),
                         ),
@@ -79,19 +81,20 @@ class UniversityDetailScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  SizedBox(height: 2.5),
+                  SizedBox(height: 6),
                   RichText(
                     text: TextSpan(
                       text: 'Tên trường : ',
                       style: AppStyle.bookDetail.copyWith(
                         color: Colors.black,
+                        fontSize: 13,
                       ),
                       children: <TextSpan>[
                         TextSpan(
                           text: '${university.name}',
                           style: TextStyle(
                             fontFamily: AppFonts.poppins,
-                            fontSize: 12,
+                            fontSize: 13,
                             shadows: [
                               Shadow(
                                 // offset: Offset(1.0, 1.0),
@@ -99,7 +102,7 @@ class UniversityDetailScreen extends StatelessWidget {
                                 color: Color(0xFF999999),
                               ),
                             ],
-                            fontWeight: FontWeight.bold,
+                            // fontWeight: FontWeight.bold,
                             // fontStyle: FontStyle.italic,
                           ),
                         ),
@@ -107,12 +110,13 @@ class UniversityDetailScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  SizedBox(height: 2.5),
+                  SizedBox(height: 6),
                   RichText(
                     text: TextSpan(
                       text: 'Website : ',
                       style: AppStyle.bookDetail.copyWith(
                         color: Colors.black,
+                        fontSize: 13,
                       ),
                       children: <TextSpan>[
                         TextSpan(
@@ -120,18 +124,20 @@ class UniversityDetailScreen extends StatelessWidget {
                           style: TextStyle(
                             fontStyle: FontStyle.italic,
                             color: Color(0xFF3366FF),
+                            fontSize: 13,
                           ),
                         ),
                         // TextSpan(text: ' world!'),
                       ],
                     ),
                   ),
-                  SizedBox(height: 2.5),
+                  SizedBox(height: 6),
                   RichText(
                     text: TextSpan(
                       text: 'Email : ',
                       style: AppStyle.bookDetail.copyWith(
                         color: Colors.black,
+                        fontSize: 13,
                       ),
                       children: <TextSpan>[
                         TextSpan(
@@ -139,18 +145,20 @@ class UniversityDetailScreen extends StatelessWidget {
                           style: TextStyle(
                             fontStyle: FontStyle.italic,
                             color: Color(0xFF3366FF),
+                            fontSize: 13,
                           ),
                         ),
                         // TextSpan(text: ' world!'),
                       ],
                     ),
                   ),
-                  SizedBox(height: 2.5),
+                  SizedBox(height: 6),
                   RichText(
                     text: TextSpan(
                       text: 'Facebook : ',
                       style: AppStyle.bookDetail.copyWith(
                         color: Colors.black,
+                        fontSize: 13,
                       ),
                       children: [
                         TextSpan(
@@ -158,24 +166,26 @@ class UniversityDetailScreen extends StatelessWidget {
                           style: TextStyle(
                             fontStyle: FontStyle.italic,
                             color: Color(0xFF3366FF),
+                            fontSize: 13,
                           ),
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(height: 2.5),
+                  SizedBox(height: 6),
                   RichText(
                     text: TextSpan(
                       text: 'Điểm đầu vào năm trước : ',
                       style: AppStyle.bookDetail.copyWith(
                         color: Colors.black,
+                        fontSize: 13,
                       ),
                       children: <TextSpan>[
                         TextSpan(
                           text: '${university.lastYearBenchMark}',
                           style: TextStyle(
                             fontFamily: AppFonts.poppins,
-                            fontSize: 12,
+                            fontSize: 13,
                             shadows: [
                               Shadow(
                                 // offset: Offset(1.0, 1.0),
@@ -183,7 +193,7 @@ class UniversityDetailScreen extends StatelessWidget {
                                 color: Color(0xFF999999),
                               ),
                             ],
-                            fontWeight: FontWeight.bold,
+                            // fontWeight: FontWeight.bold,
                             // fontStyle: FontStyle.italic,
                           ),
                         ),
@@ -191,12 +201,13 @@ class UniversityDetailScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  SizedBox(height: 2.5),
+                  SizedBox(height: 6),
                   RichText(
                     text: TextSpan(
                       text: 'Học phí : ',
                       style: AppStyle.bookDetail.copyWith(
                         color: Colors.black,
+                        fontSize: 13,
                       ),
                       children: <TextSpan>[
                         TextSpan(
@@ -204,7 +215,7 @@ class UniversityDetailScreen extends StatelessWidget {
                               '${university.minFee} - ${university.maxFee} VND',
                           style: TextStyle(
                             fontFamily: AppFonts.poppins,
-                            fontSize: 12,
+                            fontSize: 13,
                             shadows: [
                               Shadow(
                                 // offset: Offset(1.0, 1.0),
@@ -212,7 +223,7 @@ class UniversityDetailScreen extends StatelessWidget {
                                 color: Color(0xFF999999),
                               ),
                             ],
-                            fontWeight: FontWeight.bold,
+                            // fontWeight: FontWeight.bold,
                             // fontStyle: FontStyle.italic,
                           ),
                         ),
@@ -220,19 +231,66 @@ class UniversityDetailScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  SizedBox(height: 2.5),
-                  RichText(
-                    text: TextSpan(
-                      text: 'Địa chỉ : ',
-                      style: AppStyle.bookDetail.copyWith(
-                        color: Colors.black,
-                      ),
+                  SizedBox(height: 10),
+                  Divider(height: 1, color: Colors.black26),
+                  SizedBox(height: 10),
+                  Text(
+                    'Địa chỉ : ',
+                    style: AppStyle.bookDetail.copyWith(
+                      color: Colors.black,
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   ...getList(),
+                  SizedBox(height: 10),
+                  Divider(height: 1, color: Colors.black26),
+                  SizedBox(height: 10),
+                  Text(
+                    'Phương thức tuyển sinh : ',
+                    style: AppStyle.bookDetail.copyWith(
+                      color: Colors.black,
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 2),
+                  for (int i = 0; i < university.listAdmission.length; i++) ...{
+                    Text(
+                      '>> ${university.listAdmission[i].admission.method} (${university.listAdmission[i].admission.description})',
+                      style: AppStyle.bookDetail.copyWith(
+                        color: Colors.black,
+                        fontSize: 13,
+                      ),
+                    ),
+                    SizedBox(height: 3),
+                  },
+                  SizedBox(height: 10),
+                  Divider(height: 1, color: Colors.black26),
+                  SizedBox(height: 10),
+                  Text(
+                    'Danh sách chuyên nghành : ',
+                    style: AppStyle.bookDetail.copyWith(
+                      color: Colors.black,
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 2),
+                  for (int i = 0; i < university.listMajor.length; i++) ...{
+                    Text(
+                      '>> ${university.listMajor[i].major.name} (Mã : ${university.listMajor[i].major.id})',
+                      style: AppStyle.bookDetail.copyWith(
+                        color: Colors.black,
+                        fontSize: 13.6,
+                      ),
+                    ),
+                    SizedBox(height: 3),
+                  }
                 ],
               ),
-            )
+            ),
+            SizedBox(height: _sizeHeight * 0.1),
           ],
         ),
       ),

@@ -80,8 +80,8 @@ class UserController extends ChangeNotifier {
       // await setUser1(data);
       final user = User(
         address: data['student']['address'] ?? '',
-        birthday: '',
-        // birthday: '${data['student']['dob']}' ?? '',
+        // birthday: '',
+        birthday: '${data['student']['dob']}' ?? '',
         email: data['student']['email'] ?? '',
         fullName: data['student']['fullName'] ?? '',
         highSchool: data['student']['oldSchool'] ?? '',
@@ -115,6 +115,7 @@ class UserController extends ChangeNotifier {
           "phone": "${user.phone}",
           "address": "${user.address}",
           // "dob": "${user.birthday}",
+          "dob": "2021-11-01T06:48:48.281Z",
           "oldSchool": "${user.highSchool}",
           "avatar": "${user.image}"
         }),

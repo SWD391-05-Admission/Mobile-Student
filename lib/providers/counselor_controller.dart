@@ -60,9 +60,12 @@ class CounselorController extends ChangeNotifier {
       log('TOKEN IN LOCAL : $token');
 
       Uri uri = Uri.parse(
-        'http://40.81.193.10/api/counselor/getCounselors?Email=$email&FullName=$fullName&Phone=$phone&Page=$page&Limit=$limit',
+        'https://40.81.193.10/api/counselor/getCounselors?Email=$email&FullName=$fullName&Phone=$phone&Page=$page&Limit=$limit',
       );
-      Map<String, String> headers = {'Authorization': 'Bearer $token'};
+      Map<String, String> headers = {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      };
       final response = await http.get(
         uri,
         headers: headers,
@@ -76,7 +79,7 @@ class CounselorController extends ChangeNotifier {
       }
       log(data.toString());
       log('NUMBER PAGE : ${data['numPage']}');
-      // log(data['counselors'].toString());
+      log(data['counselors'].toString());
       list = (data['counselors'] as List).map((newData) {
         log('newData : ${newData.toString()}');
         Counselor counselor = Counselor(
@@ -87,10 +90,13 @@ class CounselorController extends ChangeNotifier {
           image: newData['avatar'] ??
               'https://static.remove.bg/remove-bg-web/99ab439c6e8e26adfd8c59cee4eb26f0376a9584/assets/start-1abfb4fe2980eabfbbaaa4365a0692539f7cd2725f324f904565a9a744f8e214.jpg',
           description: newData['description'] ?? '',
-          address: 'A15/5 Đường số 441, Lê Văn Toản, TPHCM',
+          address: 'Lê Văn Toản, TPHCM',
           birthday: '03-07-1985',
           gender: 'Nam',
         );
+        log('CONSELLOOOOOOOOOOOOOOOOOOOOOOOOO ${counselor.address}');
+        log('CONSELLOOOOOOOOOOOOOOOOOOOOOOOOO ${counselor.birthday}');
+        log('CONSELLOOOOOOOOOOOOOOOOOOOOOOOOO ${counselor.gender}');
         return counselor;
         // if (!list.contains(counselor)) {
         //   log('kh chứa');
@@ -139,7 +145,7 @@ class CounselorController extends ChangeNotifier {
   // Update user
   Future<User> updateUser(User user) async {
     String token = await AppValue.getToken();
-    Uri uri = Uri.parse('http://20.89.111.129/api/user/updateProfile');
+    Uri uri = Uri.parse('https://20.89.111.129/api/user/updateProfile');
     Map<String, String> headers = {
       'Authorization': 'Bearer $token',
       'Content-Type': 'application/json'

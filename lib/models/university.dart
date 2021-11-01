@@ -1,4 +1,6 @@
 import 'package:mobile_customer/models/address.dart';
+import 'package:mobile_customer/models/admissions.dart';
+import 'package:mobile_customer/models/majors.dart';
 
 class University {
   int ID;
@@ -13,6 +15,8 @@ class University {
   double maxFee;
   List<Address> listAddress;
   String image;
+  List<Admissions> listAdmission;
+  List<Majors> listMajor;
 
   University({
     this.ID,
@@ -27,6 +31,8 @@ class University {
     this.maxFee,
     this.listAddress,
     this.image,
+    this.listAdmission,
+    this.listMajor,
   });
 
   static List<University> createListUniversity() {
